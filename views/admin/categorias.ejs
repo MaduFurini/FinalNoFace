@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="/css/admin/style.css">
+
+	<title>No Face | Admin</title>
+</head>
+<body>
+	<section id="sidebar">
+		<a href="#" class="brand">
+            <img id="logo" src="/images/dark_noFaceLogo.png">
+		</a>
+		<ul class="side-menu top">
+			<li>
+				<a href="pedidos">
+					<i class='bx bxs-cart' ></i>
+					<span class="text">Pedidos</span>
+				</a>
+			</li>
+			<li>
+				<a href="produtos">
+					<i class='bx bxs-shopping-bag-alt' ></i>
+					<span class="text">Produtos</span>
+				</a>
+			</li>
+			<li>
+				<a href="funcionarios">
+					<i class='bx bxs-group' ></i>
+					<span class="text">Funcionários</span>
+				</a>
+			</li>
+			<li class="active">
+				<a href="categorias">
+					<i class='bx bxs-category' ></i>
+					<span class="text">Categorias</span>
+				</a>
+			</li>
+			<li>
+				<a href="variacoes">
+					<i class='bx bx-font-size' ></i>
+					<span class="text">Variações</span>
+				</a>
+			</li>
+		</ul>
+		<ul class="side-menu">
+			<li>
+				<a href="#" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Sair</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+
+	<section id="content">
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<form action="#">
+				<div class="form-input">
+					<input type="search" placeholder="Procurar categoria...">
+					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
+				</div>
+			</form>
+			<input type="checkbox" id="switch-mode" hidden>
+			<label for="switch-mode" class="switch-mode"></label>
+		</nav>
+
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Categorias</h1>
+				</div>
+                <a href="#" class="btn-download">
+                    <i class='bx bx-plus' ></i>
+                    <span class="text">Nova categoria</span>
+                </a>
+			</div>
+
+			<div class="table-data">
+				<div class="order">
+					<table>
+						<thead>
+							<tr>
+								<th>Nome</th>
+								<th>Descrição</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</main>
+	</section>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="/js/admin/script.js"></script>
+    <script src="/js/admin/pedidos.js"></script>
+</body>
+</html>
