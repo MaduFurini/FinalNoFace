@@ -536,7 +536,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--dark);
+    background-color: var(--blue);
     transition: .4s;
     border-radius: 20px;
 }
@@ -547,7 +547,7 @@ body {
     width: 14px;
     left: 3px;
     bottom: 3px;
-    background-color: var(--grey);
+    background-color: var(--light);
     transition: .4s;
     border-radius: 50%;
 }
@@ -574,7 +574,7 @@ input:checked + .slider:before {
     border: 1px solid #ddd;
     border-radius: 4px;
     text-decoration: none;
-    color: black;
+    color: var(--dark);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 

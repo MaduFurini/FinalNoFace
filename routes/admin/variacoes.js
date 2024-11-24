@@ -10,12 +10,14 @@ const {
 } = require('../../controllers/variacaoController')
 
 router.get('/', async (req, res) => {
+    console.log(123)
     const response = await index(req);
 
     if (response.error) {
         return res.status(500).json({ message: response.error });
     }
 
+    console.log(req.query)
     if (req.query.nome) {
         return res.json({
             itens: response.itens,

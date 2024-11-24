@@ -7,7 +7,7 @@ document.querySelectorAll('.status-checkbox').forEach(checkbox => {
         const itemId = this.dataset.id;
         const newStatus = this.checked;
 
-        fetch(`variacoes/${itemId}`, {
+        fetch(`categorias/${itemId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ document.querySelectorAll('.status-checkbox').forEach(checkbox => {
 
 document.getElementById('newItem').addEventListener('click', function () {
     Swal.fire({
-        title: 'Criar nova variação',
+        title: 'Criar nova categoria',
         html: `
             <form id="createForm">
                 <div class="form-group">
@@ -68,7 +68,7 @@ document.getElementById('newItem').addEventListener('click', function () {
                 return false;
             }
 
-            return fetch('variacoes', {
+            return fetch('categorias', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ document.getElementById('newItem').addEventListener('click', function () {
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Erro ao criar variação.');
+                        throw new Error('Erro ao criar categoria.');
                     }
 
                     return response.json();
@@ -107,12 +107,12 @@ document.getElementById('newItem').addEventListener('click', function () {
 document.getElementById('editBtn').addEventListener('click', function () {
     const id = document.getElementById('editBtn').dataset.id;
 
-    fetch(`variacoes/${id}`)
+    fetch(`categorias/${id}`)
         .then(response => response.json())
         .then(item => {
             if (item) {
                 Swal.fire({
-                    title: 'Atualizar variação',
+                    title: 'Atualizar categoria',
                     html: `
                         <form id="createForm">
                             <div class="form-group">
@@ -136,7 +136,7 @@ document.getElementById('editBtn').addEventListener('click', function () {
                         const nome = document.getElementById('nome').value;
                         const descricao = document.getElementById('descricao').value;
 
-                        return fetch(`variacoes/${id}}`, {
+                        return fetch(`categorias/${id}}`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -145,7 +145,7 @@ document.getElementById('editBtn').addEventListener('click', function () {
                         })
                             .then(response => {
                                 if (!response.ok) {
-                                    throw new Error('Erro ao atualizar variação.');
+                                    throw new Error('Erro ao atualizar categoria.');
                                 }
                                 return response.json();
                             })
@@ -189,7 +189,7 @@ document.getElementById('deleteBtn').addEventListener('click', function () {
         },
 
         preConfirm: () => {
-            return fetch(`variacoes/${id}`, {
+            return fetch(`categorias/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -197,7 +197,7 @@ document.getElementById('deleteBtn').addEventListener('click', function () {
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Erro ao excluir variação.');
+                        throw new Error('Erro ao excluir categoria.');
                     }
 
                     return response.json();
@@ -227,12 +227,13 @@ document.getElementById('deleteBtn').addEventListener('click', function () {
 document.getElementById('searchInput').addEventListener('input', function () {
     const searchTerm = document.getElementById('searchInput').value;
 
-    fetch(`variacoes?nome=${encodeURIComponent(searchTerm)}`)
+    fetch(`categorias?nome=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
             render(data);
             updatePagination(data.currentPage, data.totalPages);
         })
+        .catch(error => console.error('Erro ao buscar categorias:', error));
 });
 
 document.getElementById('clean').addEventListener('click', function () {
@@ -245,12 +246,13 @@ document.getElementById('clean').addEventListener('click', function () {
 });
 
 function fetchItens(searchTerm = '') {
-    fetch(`variacoes?nome=${encodeURIComponent(searchTerm)}`)
+    fetch(`categorias?nome=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
             render(data);
             updatePagination(data.currentPage, data.totalPages);
         })
+        .catch(error => console.error('Erro ao buscar categorias:', error));
 }
 
 function render(data) {
@@ -279,7 +281,7 @@ function render(data) {
     } else {
         itensContainer.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center;">Não há variações cadastradas</td>
+                <td colspan="5" style="text-align: center;">Não há categorias cadastradas</td>
             </tr>
         `;
     }
@@ -296,10 +298,11 @@ function updatePagination(currentPage, totalPages) {
             pageItem.classList.add('active');
         }
 
-        pageItem.innerHTML = `<a class="page-link" href="variacoes?page=${i}">${i}</a>`;
+        pageItem.innerHTML = `<a class="page-link" href="categorias?page=${i}">${i}</a>`;
         paginationContainer.appendChild(pageItem);
     }
 }
 
 fetchItens();
+
 
