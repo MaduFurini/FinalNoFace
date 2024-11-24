@@ -10,7 +10,7 @@ module.exports = {
         allowNull: false,
         primaryKey: true
       },
-      id_cateogoria: {
+      id_categoria: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
