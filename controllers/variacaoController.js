@@ -116,7 +116,6 @@ const destroy = async (req) => {
             return { message: 'Variação excluída' };
         }
     } catch (e) {
-        console.log(e.message);
         return { error: 'Erro ao excluir variação' };
     }
 }
