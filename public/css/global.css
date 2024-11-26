@@ -70,7 +70,8 @@ button {
 .btn-dark:hover,
 .btn-light:hover,
 .btn-dark-pattern:hover,
-.btn-light-pattern:hover{
+.btn-light-pattern:hover,
+.btn-danger:hover{
     transform: scale(1.1);
     transition: 0.5s;
 }

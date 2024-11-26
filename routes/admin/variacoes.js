@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
         return res.status(500).json({ message: response.error });
     }
 
-    if (req.query.nome) {
+    if (req.query.nome || req.query.status) {
         return res.json({
             itens: response.itens,
             currentPage: response.currentPage,

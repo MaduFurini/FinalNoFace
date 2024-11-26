@@ -75,7 +75,7 @@ document.getElementById('newItem').addEventListener('click', function () {
             confirmButton: 'btn-dark-pattern',
             cancelButton: 'btn-light-pattern'
         },
-        preConfirm: () => {
+        preConfirm: async () => {
             const nome = document.getElementById('nome').value;
             const email = document.getElementById('email').value;
             const cpf = document.getElementById('cpf').value;
@@ -86,71 +86,86 @@ document.getElementById('newItem').addEventListener('click', function () {
                 return false;
             }
 
-            return fetch('funcionarios', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ nome, email, cpf, senha })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao criar funcionário.');
+            if (cpf.length < 11) {
+                Swal.showValidationMessage('Por favor, insira todos os dígitos de seu CPF.');
+                return false;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                Swal.showValidationMessage('Por favor, insira um endereço de email válido.');
+                return false;
+            }
+
+            try {
+                const response = await fetch('funcionarios', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nome, email, cpf, senha })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Erro ao criar funcionário.');
+                }
+
+                return Swal.fire({
+                    title: 'Sucesso!',
+                    text: 'Funcionário criado com sucesso.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-dark-pattern',
                     }
-
-                    return response.json();
-                })
-                .then(data => {
-                    Swal.fire({
-                        title: 'Sucesso!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-dark-pattern',
-                        }
-                    });
-
+                }).then(() => {
                     setTimeout(() => {
                         location.reload();
                     }, 1500);
-                })
-                .catch(error => {
-                    Swal.showValidationMessage(`Erro: ${error.message}`);
                 });
+            } catch (error) {
+                Swal.showValidationMessage(`Erro: ${error.message}`);
+                return false;
+            }
         }
     });
 });
 
-document.getElementById('editBtn').addEventListener('click',   function () {
-    const id = document.getElementById('editBtn').dataset.id;
+document.getElementById('itensContainer').addEventListener('click', async function (event) {
+    const target = event.target;
 
-    fetch(`funcionarios/${id}`)
-        .then(response => response.json())
-        .then(item => {
+    if (target && target.id === 'editBtn') {
+        const id = target.dataset.id;
+
+        try {
+            const response = await fetch(`funcionarios/${id}`);
+            const item = await response.json();
+
             if (item) {
                 Swal.fire({
                     title: 'Atualizar funcionário',
                     html: `
-                        <form id="createForm">
-                            <div class="form-group">
-                                <label for="nome">Nome</label>
-                                <input type="text" class="input" id="nome" name="nome" value="${item.nome}">
-                            </div>
-                            <div class="form-group">
-                                <label for="cpf">CPF</label>
-                                <input type="text" class="input" id="cpf" name="cpf" value="${item.cpf}">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="text" class="input" id="email" name="email" value="${item.email}">
-                            </div>
-                            <div class="form-group">
-                                <label for="senha">Senha</label>
-                                <input type="password" class="input" id="senha" name="senha">
-                            </div>
-                        </form>
-                    `,
+                    <form id="createForm">
+                        <div class="form-group">
+                            <label for="nome">Nome</label>
+                            <input type="text" class="input" id="nome" name="nome" value="${item.nome}">
+                        </div>
+                        <div class="form-group">
+                            <label for="cpf">CPF</label>
+                            <input type="text" class="input" id="cpf" name="cpf" value="${item.cpf}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" class="input" id="email" name="email" value="${item.email}">
+                        </div>
+                        <div class="form-group">
+                            <label for="senha">Senha</label>
+                            <input type="password" class="input" id="senha" name="senha">
+                        </div>
+                    </form>
+                `,
                     didOpen: () => {
                         const cpfField = document.getElementById('cpf');
                         if (cpfField) {
@@ -166,99 +181,124 @@ document.getElementById('editBtn').addEventListener('click',   function () {
                         confirmButton: 'btn-dark-pattern',
                         cancelButton: 'btn-light-pattern'
                     },
-                    preConfirm: () => {
+                    preConfirm: async () => {
                         const nome = document.getElementById('nome').value;
                         const email = document.getElementById('email').value;
                         const cpf = document.getElementById('cpf').value;
                         const senha = document.getElementById('senha').value;
 
-                        return fetch(`funcionarios/${id}}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ nome, email, cpf, senha })
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Erro ao atualizar funcionário.');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                Swal.fire({
-                                    title: 'Sucesso!',
-                                    text: data.message,
-                                    icon: 'success',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-dark-pattern',
-                                    }
-                                });
+                        if (cpf.length < 11) {
+                            Swal.showValidationMessage('Por favor, insira todos os dígitos de seu CPF.');
+                            return false;
+                        }
 
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1500);
-                            })
-                            .catch(error => {
-                                Swal.showValidationMessage(`Erro: ${error.error}`);
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                        if (!emailRegex.test(email)) {
+                            Swal.showValidationMessage('Por favor, insira um endereço de email válido.');
+                            return false;
+                        }
+
+                        try {
+                            const updateResponse = await fetch(`funcionarios/${id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({nome, email, cpf, senha})
                             });
+
+                            const data = await updateResponse.json();
+
+                            if (!updateResponse.ok) {
+                                throw new Error(data.message || 'Erro ao atualizar funcionário.');
+                            }
+
+                            await Swal.fire({
+                                title: 'Sucesso!',
+                                text: data.message || 'Funcionário atualizado com sucesso.',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-dark-pattern',
+                                }
+                            });
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+
+                        } catch (error) {
+                            Swal.showValidationMessage(`Erro: ${error.message}`);
+                        }
                     }
                 });
             }
-        })
-});
-
-document.getElementById('deleteBtn').addEventListener('click', function () {
-    const id = document.getElementById('deleteBtn').dataset.id;
-
-    Swal.fire({
-        title: 'Tem certeza?',
-        text: "Essa ação não pode ser desfeita!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sim, excluir!',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-            confirmButton: 'btn-dark-pattern',
-            cancelButton: 'btn-light-pattern'
-        },
-
-        preConfirm: () => {
-            return fetch(`funcionarios/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao excluir funcionário.');
-                    }
-
-                    return response.json();
-                })
-                .then(data => {
-                    Swal.fire({
-                        title: 'Sucesso!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-dark-pattern',
-                        }
-                    });
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1500);
-                })
-                .catch(error => {
-                    Swal.showValidationMessage(`Erro: ${error.message}`);
-                });
+        } catch (error) {
+            Swal.fire({
+                title: 'Erro',
+                text: `Erro ao buscar funcionário: ${error.message}`,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn-dark-pattern',
+                }
+            });
         }
-    })
+    }
 });
+
+
+// document.getElementById('deleteBtn').addEventListener('click', function () {
+//     const id = document.getElementById('deleteBtn').dataset.id;
+//
+//     Swal.fire({
+//         title: 'Tem certeza?',
+//         text: "Essa ação não pode ser desfeita!",
+//         icon: 'warning',
+//         showCancelButton: true,
+//         confirmButtonText: 'Sim, excluir!',
+//         cancelButtonText: 'Cancelar',
+//         customClass: {
+//             confirmButton: 'btn-dark-pattern',
+//             cancelButton: 'btn-light-pattern'
+//         },
+//
+//         preConfirm: () => {
+//             return fetch(`funcionarios/${id}`, {
+//                 method: 'DELETE',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },
+//             })
+//                 .then(response => {
+//                     if (!response.ok) {
+//                         throw new Error('Erro ao excluir funcionário.');
+//                     }
+//
+//                     return response.json();
+//                 })
+//                 .then(data => {
+//                     Swal.fire({
+//                         title: 'Sucesso!',
+//                         text: data.message,
+//                         icon: 'success',
+//                         confirmButtonText: 'OK',
+//                         customClass: {
+//                             confirmButton: 'btn-dark-pattern',
+//                         }
+//                     });
+//
+//                     setTimeout(() => {
+//                         location.reload();
+//                     }, 1500);
+//                 })
+//                 .catch(error => {
+//                     Swal.showValidationMessage(`Erro: ${error.message}`);
+//                 });
+//         }
+//     })
+// });
 
 document.getElementById('searchInput').addEventListener('input', function () {
     const searchTerm = document.getElementById('searchInput').value;
@@ -284,6 +324,7 @@ function fetchItens(searchTerm = '') {
     fetch(`funcionarios?nome=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
+            console.log(data)
             render(data);
             updatePagination(data.currentPage, data.totalPages);
         })
@@ -306,7 +347,7 @@ function render(data) {
                     </label>
                 </td>
                 <td>
-                    <button class="btn btn-dark" style="margin-right: 5px;" data-id="${item.id}">Editar</button>
+                    <button id="editBtn" class="btn btn-dark" style="margin-right: 5px;" data-id="${item.id}">Editar</button>
                 </td>
             `;
             itensContainer.appendChild(row);

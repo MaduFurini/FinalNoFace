@@ -104,24 +104,30 @@ document.getElementById('newItem').addEventListener('click', function () {
     });
 });
 
-document.getElementById('editBtn').addEventListener('click', function () {
-    const id = document.getElementById('editBtn').dataset.id;
+document.getElementById('itensContainer').addEventListener('click', async function (event) {
+    const target = event.target;
 
-    fetch(`variacoes/${id}`)
-        .then(response => response.json())
-        .then(item => {
+    if (target && target.id === 'editBtn') {
+        const id = target.dataset.id;
+
+        try {
+            const response = await fetch(`variacoes/${id}`);
+            const item = await response.json();
+
             if (item) {
-                Swal.fire({
+                const { nome, descricao } = item;
+
+                const result = await Swal.fire({
                     title: 'Atualizar variação',
                     html: `
                         <form id="createForm">
                             <div class="form-group">
                                 <label for="nome">Nome</label>
-                                <input type="text" class="input" id="nome" name="nome" value="${item.nome}">
+                                <input type="text" class="input" id="nome" name="nome" value="${nome}">
                             </div>
                             <div class="form-group">
                                 <label for="descricao">Descrição</label>
-                                <input type="text" class="input" id="descricao" name="descricao" value="${item.descricao}">
+                                <input type="text" class="input" id="descricao" name="descricao" value="${descricao}">
                             </div>
                         </form>
                     `,
@@ -132,80 +138,91 @@ document.getElementById('editBtn').addEventListener('click', function () {
                         confirmButton: 'btn-dark-pattern',
                         cancelButton: 'btn-light-pattern'
                     },
-                    preConfirm: () => {
+                    preConfirm: async () => {
                         const nome = document.getElementById('nome').value;
                         const descricao = document.getElementById('descricao').value;
 
-                        return fetch(`variacoes/${id}}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({nome, descricao})
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Erro ao atualizar variação.');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                Swal.fire({
-                                    title: 'Sucesso!',
-                                    text: data.message,
-                                    icon: 'success',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-dark-pattern',
-                                    }
-                                });
-
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1500);
-                            })
-                            .catch(error => {
-                                Swal.showValidationMessage(`Erro: ${error.error}`);
+                        try {
+                            const updateResponse = await fetch(`variacoes/${id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ nome, descricao })
                             });
+
+                            const data = await updateResponse.json();
+
+                            if (!updateResponse.ok) {
+                                throw new Error(data.message || 'Erro ao atualizar variação.');
+                            }
+
+                            await Swal.fire({
+                                title: 'Sucesso!',
+                                text: data.message || 'Variação atualizada com sucesso.',
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-dark-pattern',
+                                }
+                            });
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+
+                        } catch (error) {
+                            Swal.showValidationMessage(`Erro: ${error.message}`);
+                        }
                     }
                 });
             }
-        })
-});
+        } catch (error) {
+            Swal.fire({
+                title: 'Erro',
+                text: `Erro ao buscar variação: ${error.message}`,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn-dark-pattern',
+                }
+            });
+        }
+    }
 
-document.getElementById('deleteBtn').addEventListener('click', function () {
-    const id = document.getElementById('deleteBtn').dataset.id;
+    if (target && target.id === 'deleteBtn') {
+        const id = target.dataset.id;
 
-    Swal.fire({
-        title: 'Tem certeza?',
-        text: "Essa ação não pode ser desfeita!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sim, excluir!',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-            confirmButton: 'btn-dark-pattern',
-            cancelButton: 'btn-light-pattern'
-        },
+        const result = await Swal.fire({
+            title: 'Tem certeza?',
+            text: "Essa ação não pode ser desfeita!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                confirmButton: 'btn-dark-pattern',
+                cancelButton: 'btn-light-pattern'
+            },
 
-        preConfirm: () => {
-            return fetch(`variacoes/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao excluir variação.');
+            preConfirm: async () => {
+                try {
+                    const deleteResponse = await fetch(`variacoes/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    });
+
+                    const data = await deleteResponse.json();
+
+                    if (!deleteResponse.ok) {
+                        throw new Error(data.message || 'Erro ao excluir variação.');
                     }
 
-                    return response.json();
-                })
-                .then(data => {
-                    Swal.fire({
+                    await Swal.fire({
                         title: 'Sucesso!',
-                        text: data.message,
+                        text: data.message || 'Variação excluída com sucesso.',
                         icon: 'success',
                         confirmButtonText: 'OK',
                         customClass: {
@@ -216,12 +233,13 @@ document.getElementById('deleteBtn').addEventListener('click', function () {
                     setTimeout(() => {
                         location.reload();
                     }, 1500);
-                })
-                .catch(error => {
+
+                } catch (error) {
                     Swal.showValidationMessage(`Erro: ${error.message}`);
-                });
-        }
-    })
+                }
+            }
+        });
+    }
 });
 
 document.getElementById('searchInput').addEventListener('input', function () {
@@ -270,8 +288,8 @@ function render(data) {
                     </label>
                 </td>
                 <td>
-                    <button class="btn btn-dark" style="margin-right: 5px;" data-id="${item.id}">Editar</button>
-                    <button class="btn btn-danger" data-id="${item.id}">Excluir</button>
+                    <button id="editBtn" class="btn-dark" style="margin-right: 5px;" data-id="${item.id}">Editar</button>
+                    <button id="deleteBtn" class="btn-danger" data-id="${item.id}">Excluir</button>
                 </td>
             `;
             itensContainer.appendChild(row);
@@ -303,3 +321,6 @@ function updatePagination(currentPage, totalPages) {
 
 fetchItens();
 
+function teste () {
+    console.log(1231231231)
+}

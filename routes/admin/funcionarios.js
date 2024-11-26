@@ -34,10 +34,11 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const response = await store(req);
 
-    if (response) {
+    console.log(response.error)
+    if (!response.error) {
         res.status(200).json({ message: 'Funcionário criado com sucesso.' });
     } else {
-        res.status(500).json({ message: response });
+        res.status(500).json({ message: response.error });
     }
 });
 

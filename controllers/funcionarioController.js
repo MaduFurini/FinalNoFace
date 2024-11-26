@@ -112,6 +112,7 @@ const update = async (req) => {
                 }
             });
 
+            console.log(user)
             if (user) {
                 let message;
                 if (user.email === email) {

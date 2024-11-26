@@ -4,45 +4,36 @@ const Produto = require('../models/produto');
 const { Op } = require('sequelize');
 
 const index = async (req) => {
-    const page = parseInt(req.query.page) || 1;
+    const page = parseInt(req.query.page, 10) || 1;
     const limit = 5;
     const offset = (page - 1) * limit;
 
     const searchTerm = req.query.nome || '';
-
-    let itens = null;
-    let count = null;
+    const status  = req.query.status;
 
     try {
-        if (searchTerm) {
-            const result = await Variacao.findAndCountAll({
-                where: {
-                    nome: {
-                        [Op.like]: `%${searchTerm}%`
-                    }
-                },
-                limit: limit,
-                offset: offset
-            });
-            count = result.count;
-            itens = result.rows;
-        } else {
-            const result = await Variacao.findAndCountAll({
-                limit: limit,
-                offset: offset
-            });
-            count = result.count;
-            itens = result.rows;
+        const where = {};
+        if (status != null) {
+            where.status = status;
         }
 
-        const totalPages = Math.ceil(count / limit);
+        if (searchTerm) {
+            where.nome = { [Op.like]: `%${searchTerm}%` };
+        }
 
-        return { itens, currentPage: page, totalPages };
+        const result = await Variacao.findAndCountAll({
+            where,
+            limit,
+            offset,
+        });
+
+        const totalPages = Math.ceil(result.count / limit);
+
+        return { itens: result.rows, currentPage: page, totalPages };
     } catch (e) {
         return { error: e.message };
     }
 };
-
 
 const store = async (req) => {
     const { nome, descricao } = req.body;
