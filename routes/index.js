@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+router.use('/assets', express.static('assets'));
 
 // ROTAS
 const pedidosRoutes = require('./admin/pedidos');
@@ -15,6 +16,6 @@ router.use('/admin/categorias', categoriasRoutes);
 router.use('/admin/funcionarios', funcionariosRoutes);
 router.use('/admin/produtos', produtosRoutes);
 
-router.use('/home', homeRoutes);
+router.use('/', homeRoutes);
 
 module.exports = router;

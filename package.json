@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "build-tail": "cros NODE_ENV=production tailwindcss build -i ./public/css/tailwindcss.css -o ./assets/style.css"
   },
   "author": "",
   "license": "ISC",
@@ -24,5 +24,10 @@
     "nodemon": "^3.1.7",
     "sequelize": "^6.37.5",
     "sequelize-cli": "^6.6.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15"
   }
 }

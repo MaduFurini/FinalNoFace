@@ -1,91 +1,59 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.75">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/css/home/style.css">
-    <link rel="stylesheet" href="/css/global.css">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
 
-    <title>Home</title>
-</head>
-    <body>
-    <div>
-        <div class="h-42 flex flex-col bg-pattern start-screen">
-            <div class="flex items-center justify-between bg-pattern px-5 py-2">
-                <img src="{{ asset('images/noFaceLogo.png') }}" alt="" class="w-28 mt-4" />
-                <div class="flex gap-3 text-white mt-4 pr-12 libre-franklin">
-                    <a href="" class="a-hover">Home</a>
-                    <a href="" class="a-hover">Shop</a>
-                    <a href="" class="a-hover">Portfólio</a>
-                    <a href="" class="a-hover">Contato</a>
-                </div>
-            </div>
-            <div class="bg-pattern pb-28 pt-12 text-center text-white sm:px-10 flex-grow mt-10 slogan">
-                <h1 class="text-8xl font-bold lilita-one-regular">Vista a rua</h1>
-                <div class="mt-5">
-                    <button class="w-28 rounded-lg border border-white bg-white py-2 text-black white-button mr-5">Portfólio</button>
-                    <button class="w-28 rounded-lg border border-white bg-pattern py-2 black-button ml-5">Sobre nós</button>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.75">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/assets/style.css">
+        <script src="/js/menu.js"></script>
+        <title>NoFace | Home</title>
+
+    </head>
+    <%- include('../partials/header.ejs') %>
+        <div class="bg-gray-950 pb-28 py-12 text-center">
+            <div class=" mx-auto md:max-w-[100rem] max-w-[50rem]">
+                <h1 class="text-4xl font-bold text-white lilita-one-regular">Vista a rua</h1>
+                <div class="flex mt-8 gap-3 justify-center flex-col md:flex-row items-center">
+                    <a href="/portfolio" class="rounded-lg border border-white bg-white py-2 px-4 hover:bg-gray-950/80 hover:text-white cursor-pointer w-fit">Portfólio</a>
+                    <a href="/sobre" class="rounded-lg border border-white bg-gray-950 py-2 px-4 text-white hover:bg-white hover:text-black cursor-pointer">Sobre nós</a>
                 </div>
             </div>
         </div>
-        <div class="py-12 pb-52 mb-32 h-70 mt-14 sm:mb-32 home-procucts">
-            <h1 class="text-center text-6xl font-bold lilita-one-regular">Conheça nossa coleção</h1>
-            <div class="mt-14 flex justify-evenly gap-5 sm:flex-col sm:gap-12 sm:mt-14 libre-franklin">
-                <div class="flex flex-col items-center gap-3 mt-32">
-                    <img src="https://noface.gusmeira.cloud/attachments/e74aafdd3b78d7bfd1fb9bb764c3eae9.jpeg" alt="" class="w-52 rounded-xl border border-black" />
+        <div class="py-12 mx-auto md:max-w-[100rem] max-w-[50rem]" >
+            <h1 class="text-center text-4xl font-bold lilita-one-regular">Conheça nossa coleção</h1>
+            <div class="md:mt-10 flex justify-evenly md:gap-5 mt-14 flex-col gap-12 md:flex-row">
+                <div class="flex flex-col items-center gap-3">
+                    <img src="/images/camiseta_free.jpeg" alt="" class="w-52 rounded-xl border border-black" />
                     <p class="text-xl font-bold">Camiseta "Free"</p>
-                    <button class="rounded-lg border border-black bg-white px-4 py-2 white-button">Comprar</button>
+                    <form action="/produto/1">
+                        <button class="rounded-lg border border-black hover:bg-gray-950 hover:text-white px-4 py-0.5">Comprar</button>
+                    </form>
                 </div>
-                <div class="flex flex-col items-center gap-3 mt-32">
-                    <img src="https://noface.gusmeira.cloud/attachments/3fd8857369686425c6ae832a07610317.jpeg" alt="" class="w-52 rounded-xl border border-black" />
+                <div class="flex flex-col items-center gap-3">
+                    <img src="/images/camiseta_paradise.jpeg" alt="" class="w-52 rounded-xl border border-black" />
                     <p class="text-xl font-bold">Camiseta "Paradise"</p>
-                    <button class="rounded-lg border border-black bg-white px-4 py-2 white-button">Comprar</button>
+                    <form action="/produto/2">
+                        <button class="rounded-lg border border-black hover:bg-gray-950 hover:text-white px-4 py-0.5">Comprar</button>
+                    </form>
                 </div>
-                <div class="flex flex-col items-center gap-3 mt-32">
-                    <img src="https://noface.gusmeira.cloud/attachments/80a4f9cf10e6207cb456adf754179b5e.jpeg" alt="" class="w-52 rounded-xl border border-black" />
+                <div class="flex flex-col items-center gap-3">
+                    <img src="/images/camiseta_gang_for_real.jpeg" alt="" class="w-52 rounded-xl border border-black" />
                     <p class="text-xl font-bold">Camiseta "Gang 4 Real"</p>
-                    <button class="rounded-lg border border-black bg-white px-4 py-2 white-button">Comprar</button>
+                    <form action="/produto/3">
+                        <button class="rounded-lg border border-black hover:bg-gray-950 hover:text-white px-4 py-0.5">Comprar</button>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="mt-14 flex bg-black px-24 py-12 text-white sm:px-8 bg-pattern bg-pattern-relative relative">
-            <div class="text-center z-10 text-port">
-                <h1 class="text-center text-2xl font-bold sm:text-xl lilita-one-regular">Explore a essência urbana em cada detalhe</h1>
-                <p class="text-lg mt-1 libre-franklin">Fortalecendo a autoexpressão através do estilo e do lifestyle urbano</p>
-                <button class="w-fit mt-4 rounded-lg border border-white bg-white py-6 px-5 text-black black-button">Conheça nosso portfólio</button>
-            </div>
-            <div class="img-3d ml-auto"> <!-- Adiciona margin-left auto para empurrar a div para a direita -->
-                <img src="{{ asset('images/homePageModel.png') }}" alt="Modelo 3D" class="w-32" />
+        <div class="mt-10 bg-gray-950 md:px-12 py-12 px-8 relative">
+            <div class="mx-auto md:max-w-[100rem] max-w-[50rem]">
+                <div class="text-center w-[70%]">
+                    <h1 class="text-2xl font-bold sm:text-xl lilita-one-regular text-white">Explore a essência urbana em cada detalhe</h1>
+                    <p class="text-lg mt-1 mb-5 libre-franklin text-white">Fortalecendo a autoexpressão através do estilo e do lifestyle urbano</p>
+                    <a href="/portfolio" class="w-fit rounded-lg border border-white bg-white py-2 px-5 black-button hover:bg-gray-950/80 hover:text-white">Conheça nosso portfólio</a>
+                </div>
+                <img src="/images/homePageModel.png" alt="Modelo 3D" class="absolute w-52 bottom-0 right-72" />
             </div>
         </div>
-        <div class="flex md:flex-col items-center gap-7 py-8 sm:flex-row sm:justify-between sm:px-4">
-            <img src="{{ asset('images/stayNoFaceLogo.png') }}" alt="" class="w-46" />
-            <div class="flex flex-col gap-2 text-center libre-franklin">
-                <a href="" class="a-hover">Shop</a>
-                <a href="" class="a-hover">Sobre nós</a>
-                <a href="" class="a-hover">Portfólio</a>
-                <a href="" class="a-hover">Política de troca e devolução</a>
-                <a href="" class="a-hover">Fale conosco</a>
-            </div>
-            <div class="flex md:flex-row justify-center gap-2 sm:flex-col">
-                <div class="w-fit rounded-full bg-black p-2 icon-hover">
-                    <svg class="svg-inline--fa fa-instagram size-5 text-white" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="instagram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                        <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path>
-                    </svg>
-                </div>
-                <div class="w-fit rounded-full bg-black p-2 icon-hover">
-                    <svg class="svg-inline--fa fa-tiktok size-5 text-white" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="tiktok" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                        <path fill="currentColor" d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"></path>
-                    </svg>
-                </div>
-                <div class="w-fit rounded-full bg-black p-2 icon-hover">
-                    <svg class="svg-inline--fa fa-pinterest-p size-5 text-white" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="pinterest-p" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg="">
-                        <path fill="currentColor" d="M204 6.5C101.4 6.5 0 74.9 0 185.6 0 256 39.6 296 63.6 296c9.9 0 15.6-27.6 15.6-35.4 0-9.3-23.7-29.1-23.7-67.8 0-80.4 61.2-137.4 140.4-137.4 68.1 0 118.5 38.7 118.5 109.8 0 53.1-21.3 152.7-90.3 152.7-24.9 0-46.2-18-46.2-43.8 0-37.8 26.4-74.4 26.4-113.4 0-66.2-93.9-54.2-93.9 25.8 0 16.8 2.1 35.4 9.6 50.7-13.8 59.4-42 147.9-42 209.1 0 18.9 2.7 37.5 4.5 56.4 3.4 3.8 1.7 3.4 6.9 1.5 50.4-69 48.6-82.5 71.4-172.8 12.3 23.4 44.1 36 69.3 36 106.2 0 153.9-103.5 153.9-196.8C384 71.3 298.2 6.5 204 6.5z"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+    <%- include('../partials/footer.ejs') %>
