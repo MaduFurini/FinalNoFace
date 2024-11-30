@@ -9,7 +9,6 @@ const categoriasRoutes = require('./admin/categorias');
 const funcionariosRoutes = require('./admin/funcionarios');
 const produtosRoutes = require('./admin/produtos');
 const homeRoutes = require('./home/home');
-const shopRoutes = require('./users/shop');
 
 router.use('/admin/pedidos', pedidosRoutes);
 router.use('/admin/variacoes', variacoesRoutes);
@@ -18,7 +17,6 @@ router.use('/admin/funcionarios', funcionariosRoutes);
 router.use('/admin/produtos', produtosRoutes);
 
 router.use('/', homeRoutes);
-
-router.use('/shop', shopRoutes);
+router.use('/shop', homeRoutes);
 
 module.exports = router;
