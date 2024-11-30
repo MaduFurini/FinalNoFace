@@ -1,5 +1,22 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Lilita+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --poppins: 'Poppins', sans-serif;
+    --lato: 'Lato', sans-serif;
+
+    --light: #F9F9F9;
+    --blue: #6c6c6c;
+    --light-blue: #CFE8FF;
+    --grey: #eee;
+    --dark-grey: #AAAAAA;
+    --dark: #121212;
+    --red: #DB504A;
+    --yellow: #FFCE26;
+    --light-yellow: #FFF2C6;
+    --orange: #FD7238;
+    --light-orange: #FFE0D3;
+}
 
 .libre-franklin {
     font-family: "Libre Franklin", sans-serif;
@@ -11,4 +28,81 @@
     font-family: "Lilita One", sans-serif;
     font-weight: 400;
     font-style: normal;
+}
+.btn-dark {
+    background-color: var(--dark);
+    color: var(--light);
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+}
+button {
+    cursor: pointer;
+}
+.btn-light {
+    background-color: white;
+    color: var(--dark);
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+}
+.btn-dark-pattern {
+    background-color: #121212;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+}
+.btn-light-pattern {
+    background-color: white;
+    color: #121212;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+}
+.btn-danger {
+    background-color: var(--red);
+    color: var(--light);
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+}
+.btn-dark:hover,
+.btn-light:hover,
+.btn-dark-pattern:hover,
+.btn-light-pattern:hover,
+.btn-danger:hover{
+    transform: scale(1.1);
+    transition: 0.5s;
+}
+.swal2-popup {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.swal2-popup {
+    font-family: var(--lato);
+    z-index: 3000;
+}
+.swal2-container {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    z-index: 3000 !important;
 }

@@ -6,6 +6,8 @@
 
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<link rel="stylesheet" href="/css/admin/style.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="shortcut icon" href="/images/dark_noFaceLogo.png">
 
 	<title>No Face | Admin</title>
 </head>
@@ -61,7 +63,8 @@
 			<i class='bx bx-menu' ></i>
 			<form action="#">
 				<div class="form-input">
-					<input type="search" placeholder="Procurar funcionário...">
+					<input id="searchInput" placeholder="Procurar funcionário...">
+					<button id="clean"><i class='bx bx-x-circle'></i></button>
 					<button type="submit" class="search-btn"><i class='bx bx-search' ></i></button>
 				</div>
 			</form>
@@ -74,7 +77,7 @@
 				<div class="left">
 					<h1>Funcionários</h1>
 				</div>
-                <a href="#" class="btn-download">
+                <a href="#" class="btn-download" id="newItem">
                     <i class='bx bx-plus' ></i>
                     <span class="text">Novo funcionário</span>
                 </a>
@@ -87,12 +90,52 @@
 							<tr>
 								<th>Nome</th>
 								<th>Email</th>
-                                <th>Status</th>
+								<th>Status</th>
+                                <th>Ações</th>
 							</tr>
 						</thead>
-						<tbody>
-
+						<tbody id="itensContainer">
+                            <% if (itens && itens.length > 0) { %>
+                                <% itens.forEach(item => { %>
+                                    <tr>
+                                        <td><%= item.nome %></td>
+                                        <td>
+                                            <%= item.email %>
+                                        </td>
+                                        <td>
+                                            <label class="switch">
+                                                <input type="checkbox"
+                                                       class="status-checkbox"
+                                                       data-id="<%= item.id %>"
+                                                       <%= item.status ? 'checked' : '' %> />
+                                                <span class="slider"></span>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <button id="editBtn" class="btn btn-dark" style="margin-right: 5px;" data-id="<%= item.id %>">Editar</button>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">Não há funcionários cadastrados</td>
+                                </tr>
+                            <% } %>
 						</tbody>
+
+						<tfoot>
+                            <tr>
+                                <td colspan="5">
+                                    <ul class="pagination">
+                                        <% for(let i = 1; i <= totalPages; i++) { %>
+                                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                <a class="page-link" href="funcionarios?page=<%= i %>"><%= i %></a>
+                                            </li>
+                                        <% } %>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tfoot>
 					</table>
 				</div>
 			</div>
@@ -101,6 +144,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="/js/admin/script.js"></script>
-    <script src="/js/admin/pedidos.js"></script>
+    <script src="/js/admin/funcionarios.js"></script>
 </body>
 </html>

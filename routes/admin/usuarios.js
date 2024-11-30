@@ -6,9 +6,8 @@ const {
     store,
     update,
     destroy,
-    show,
-    indexProdutos
-} = require('../../controllers/pedidoController')
+    show
+} = require('../../controllers/usuarioController')
 
 router.get('/', async (req, res) => {
     const response = await index(req);
@@ -17,14 +16,14 @@ router.get('/', async (req, res) => {
         return res.status(500).json({ message: response.error });
     }
 
-    if (req.query.codigo) {
+    if (req.query.nome) {
         return res.json({
             itens: response.itens,
             currentPage: response.currentPage,
             totalPages: response.totalPages
         });
     } else {
-        res.render('admin/pedidos', {
+        res.render('admin/funcionarios', {
             itens: response.itens,
             currentPage: response.currentPage,
             totalPages: response.totalPages
@@ -37,7 +36,7 @@ router.post('/', async (req, res) => {
 
     console.log(response.error)
     if (!response.error) {
-        res.status(200).json({ message: 'Pedido registrado com sucesso.' });
+        res.status(200).json({ message: 'Funcionário criado com sucesso.' });
     } else {
         res.status(500).json({ message: response.error });
     }
@@ -48,7 +47,7 @@ router.put('/:id', async (req, res) => {
 
     console.log(response)
     if (response) {
-        res.status(200).json({ message: 'Pedido atualizado com sucesso.' });
+        res.status(200).json({ message: 'Funcionário atualizado com sucesso.' });
     } else {
         res.status(500).json({ message: response });
     }
@@ -69,16 +68,6 @@ router.delete('/:id', async (req, res) => {
 
     if (response.message) {
         res.status(200).json({ message: response.message })
-    } else {
-        res.status(500).json({ message: response });
-    }
-});
-
-router.get('/produtos/:id', async (req, res) => {
-    const response = await indexProdutos(req);
-
-    if (response) {
-        return res.json(response);
     } else {
         res.status(500).json({ message: response });
     }
