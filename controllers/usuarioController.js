@@ -76,7 +76,7 @@ const store = async (req) => {
             email: email,
             senha: senhaHasheada,
             cpf: cpf,
-            tipo_usuario: 'admin',
+            tipo_usuario: 'cliente',
             status: 1,
             createdAt: new Date(),
             updatedAt: new Date()
@@ -84,7 +84,7 @@ const store = async (req) => {
 
         return true;
     } catch (e) {
-        return { error: "Erro ao listar funcionários" };
+        return { error: "Erro ao listar clientes" };
     }
 }
 
@@ -136,7 +136,7 @@ const update = async (req) => {
 
         return true;
     } catch (e) {
-        return { error: "Erro ao atualizar funcionário" };
+        return { error: "Erro ao atualizar cliente" };
     }
 }
 
@@ -147,7 +147,7 @@ const destroy = async (req) => {
         const item = await Usuario.findByPk(id);
 
         if (!item) {
-            return { error: 'Funcionário não encontrado' };
+            return { error: 'Cliente não encontrado' };
         }
 
         item.status = 0;
@@ -155,9 +155,9 @@ const destroy = async (req) => {
 
         await item.save();
 
-        return { message: 'Funcionário inativado com sucesso' };
+        return { message: 'Cliente inativado com sucesso' };
     } catch (e) {
-        return { error: 'Erro ao inativar usuário' };
+        return { error: 'Erro ao inativar cliente' };
     }
 }
 
@@ -168,12 +168,12 @@ const show = async (req) => {
         const item = await Usuario.findByPk(id);
 
         if (!item) {
-            return { error: 'Funcionário não encontrado' };
+            return { error: 'Cliente não encontrado' };
         }
 
         return item;
     } catch (error) {
-        return { error: 'Erro ao buscar funcionário' };
+        return { error: 'Erro ao buscar cliente' };
     }
 }
 
