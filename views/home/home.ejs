@@ -21,9 +21,11 @@
         <div class="py-12 mx-auto md:max-w-[100rem] max-w-[50rem]" >
             <h1 class="text-center text-4xl font-bold lilita-one-regular">Conheça nossa coleção</h1>
             <div class="md:mt-10 flex justify-evenly md:gap-5 mt-14 flex-col gap-12 md:flex-row">
-                <% products.forEach(product =>{ %>
-                    <%- include('../partials/product.ejs') %>
-                <% }) %>
+                <% /* 
+                    products.forEach(product => {
+                        include('../partials/product.ejs');
+                    });
+                */ %>
             </div>
         </div>
         <div class="mt-10 bg-gray-950 md:px-12 py-12 px-5 md:px-8 relative">
