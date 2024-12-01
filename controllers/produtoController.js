@@ -131,7 +131,12 @@ const indexHome = async (req) => {
 const indexShop = async (req) => {
     try {
         const produtos = await Produto.findAll({
-            where: { status: 1 },
+            where: {
+                status: 1,
+                id_referencia: {
+                    [Op.is]: null
+                }
+            },
         });
 
         const categoriaIds = [...new Set(produtos.map(p => p.id_categoria))];
