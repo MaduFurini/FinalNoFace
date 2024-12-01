@@ -57,7 +57,7 @@ router.get('/:id', async (req, res) => {
     const response = await show(req);
 
     if (response) {
-        return res.json(response);
+        return res.render("home/product", response);
     } else {
         res.status(500).json({ message: response });
     }
