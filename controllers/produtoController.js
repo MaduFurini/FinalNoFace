@@ -3,7 +3,7 @@ const Produto = require('../models/produto');
 const Categoria = require('../models/categoria');
 const ProdutoPedido = require('../models/produtoPedido');
 
-const { Op } = require('sequelize');
+const { Op, Sequelize} = require('sequelize');
 const path = require("path");
 const multer = require('multer');
 const fs = require("fs");
@@ -92,6 +92,58 @@ const index = async (req) => {
     }
 };
 
+const indexHome = async (req) => {
+    try {
+        const result = await Produto.findAndCountAll({
+            where: {
+                status: 1,
+                img: {
+                    [Op.and]: [
+                        { [Op.ne]: null },
+                        { [Op.ne]: '' }
+                    ]
+                }
+            },
+            limit: 3,
+            order: [
+                [Sequelize.fn('RAND')]
+            ]
+        });
+
+        const itens = result.rows;
+        return { itens };
+    } catch (e) {
+        return { error: e.message };
+    }
+};
+
+const indexShop = async (req) => {
+    try {
+        const produtos = await Produto.findAll({
+            where: { status: 1 },
+        });
+
+        const categoriaIds = [...new Set(produtos.map(p => p.id_categoria))];
+
+        const categorias = await Categoria.findAll({
+            where: {
+                id: { [Op.in]: categoriaIds },
+            },
+        });
+
+        const produtosPorCategoria = categorias.reduce((map, categoria) => {
+            map[categoria.id] = produtos.filter(
+                produto => produto.id_categoria === categoria.id
+            );
+            return map;
+        }, {});
+
+
+        return { categorias, produtosPorCategoria };
+    } catch (e) {
+        return { error: e.message };
+    }
+};
 
 const store = async (req) => {
     const { nome, categoria, variacao, descricao, preco, imagem } = req.body;
@@ -127,7 +179,7 @@ const store = async (req) => {
 }
 
 const update = async (req) => {
-    console.log(123)
+    console.log(123);
     const { nome, categoria, variacao, descricao, preco, imagem, status, removeImg } = req.body;
     const { id } = req.params;
 
@@ -145,11 +197,11 @@ const update = async (req) => {
         item.preco = preco || item.preco;
         item.status = status === false ? 0 : 1 || item.status;
 
-        if (imagem) {
-            const newFileName = `${item.id}${path.extname(imagem.originalname)}`;
+       if (req.file) {
+            const newFileName = `${item.id}${path.extname(req.file.originalname)}`;
             const newFilePath = path.join('public/images/produtos', newFileName);
 
-            fs.renameSync(imagem.path, newFilePath);
+            fs.renameSync(req.file.path, newFilePath);
 
             item.img = `/images/produtos/${newFileName}`;
             await item.save();
@@ -245,4 +297,4 @@ const show = async (req) => {
     }
 }
 
-module.exports = { upload, index, store, update, destroy, show };
+module.exports = { upload, index, store, update, destroy, show, indexHome, indexShop };

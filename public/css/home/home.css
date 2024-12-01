@@ -62,6 +62,11 @@ p:hover {
     transition: 0.5s;
 }
 
+.produtos {
+    min-height: 30vh;
+    margin-bottom: 20vh;
+}
+
 @media (max-width: 1024px) {
     .content {
         flex-direction: row;

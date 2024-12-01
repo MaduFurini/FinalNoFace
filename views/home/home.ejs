@@ -6,7 +6,8 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel="stylesheet" href="/css/assets/style.css">
         <link rel="stylesheet" href="/css/home/home.css">
-        <script src="/js/users/menu.js"></script>
+        <link rel="shortcut icon" href="/images/dark_noFaceLogo.png">
+
         <title>NoFace | Home</title>
     </head>
     <%- include('../partials/header.ejs') %>
@@ -19,30 +20,40 @@
                 </div>
             </div>
         </div>
-        <div class="py-12 mx-auto md:max-w-[100rem] max-w-[50rem]" >
-            <h1 class="text-center text-4xl font-bold lilita-one-regular">Conheça nossa coleção</h1>
-            <div class="mt-14 grid md:grid-cols-3 lg:grid-cols-4 justify-evenly gap-12 md:mt-10 md:flex-row">
-                <% /* 
-                    products.forEach(product => {
-                        include('../partials/product.ejs');
-                    });
-                */ %>
-            </div>
+        <div class="produtos py-12 mx-auto max-w-screen-xl text-center min-h-screen flex flex-col justify-center items-center">
+            <% if (itens && itens.length > 0) { %>
+                <div class="w-full text-center mb-12">
+                    <h1 class="text-4xl font-bold">Conheça nossa coleção</h1>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-<%= Math.min(itens.length, 3) %> lg:grid-cols-<%= Math.min(itens.length, 3) %> gap-24 mt-10 justify-items-center w-full">
+                    <% itens.forEach(item => { %>
+                        <div class="flex flex-col justify-between items-center gap-3 w-52 h-full">
+                            <a href="produto/<%= item.id %>" class="w-full h-64 flex justify-center items-center overflow-hidden rounded-xl border border-black hover:opacity-85">
+                                <img src="<%= item.img %>" alt="" class="w-full h-full object-cover" />
+                            </a>
+                            <form action="produto/<%= item.id %>" method="post">
+                                <p class="text-xl font-bold"><%= item.nome %></p>
+                                <button class="rounded-lg border border-black hover:bg-opacity-85 bg-black text-white shadow-md w-32 py-1 mt-2">Comprar</button>
+                            </form>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
         </div>
+
         <div class="container">
             <div class="content">
-                <!-- Texto -->
                 <div class="text">
                     <h1>Explore a essência urbana em cada detalhe</h1>
                     <p>Fortalecendo a autoexpressão através do estilo e do lifestyle urbano</p>
                     <a href="/portfolio" class="btn">Conheça nosso portfólio</a>
                 </div>
-                <!-- Imagem -->
                 <div class="image-container">
                     <img src="/images/homePageModel.png" alt="Modelo 3D" class="image">
                 </div>
             </div>
         </div>
 
+    <script src="/js/users/menu.js"></script>
 
     <%- include('../partials/footer.ejs') %>

@@ -713,6 +713,9 @@ video {
 .justify-evenly {
   justify-content: space-evenly;
 }
+.gap-24 {
+  gap: 6rem;
+}
 
 .gap-12 {
   gap: 3rem;
