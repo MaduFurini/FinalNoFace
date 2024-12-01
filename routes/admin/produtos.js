@@ -5,6 +5,7 @@ const multer = require('multer');
 const {
     upload,
     index,
+    indexVariacoes,
     store,
     update,
     destroy,
@@ -31,6 +32,18 @@ router.get('/', async (req, res) => {
             totalPages: response.totalPages
         });
     }
+});
+
+router.get('/variacoes/:id', async (req, res) => {
+    const response = await indexVariacoes(req);
+
+    if (response.error) {
+        return res.status(500).json({ message: response.error });
+    }
+
+    return res.json({
+        itens: response.variacoesMap
+    });
 });
 
 router.post('/',  upload.single('imagem'), async (req, res) => {

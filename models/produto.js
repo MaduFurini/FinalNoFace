@@ -8,6 +8,14 @@ const Produto = database.define('produtos', {
         allowNull: false,
         primaryKey: true
     },
+    id_referencia: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'produtos',
+            key: 'id'
+        }
+    },
     id_categoria: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -18,7 +26,7 @@ const Produto = database.define('produtos', {
     },
     id_variacao: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'variacoes',
             key: 'id'

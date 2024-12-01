@@ -36,6 +36,9 @@ const index = async (req) => {
                 where: {
                     nome: {
                         [Op.like]: `%${searchTerm}%`
+                    },
+                    id_referencia: {
+                        [Op.is]: null
                     }
                 },
                 limit: limit,
@@ -45,6 +48,11 @@ const index = async (req) => {
             itens = result.rows;
         } else {
             const result = await Produto.findAndCountAll({
+                where: {
+                    id_referencia: {
+                        [Op.is]: null
+                    }
+                },
                 limit: limit,
                 offset: offset
             });
@@ -102,6 +110,9 @@ const indexHome = async (req) => {
                         { [Op.ne]: null },
                         { [Op.ne]: '' }
                     ]
+                },
+                id_referencia: {
+                    [Op.is]: null
                 }
             },
             limit: 3,
@@ -145,13 +156,63 @@ const indexShop = async (req) => {
     }
 };
 
+const indexVariacoes = async (req) => {
+    try {
+        const produto = await Produto.findByPk(req.params.id);
+
+        const produtosFilhos = await Produto.findAll({
+            where: {
+                id_referencia: produto.id,
+                status: 1
+            },
+        });
+
+        const variacoesIds = [...new Set(produtosFilhos.map(p => p.id_variacao))];
+
+        const variacoes = await Variacao.findAll({
+            where: {
+                id: { [Op.in]: variacoesIds },
+            },
+        });
+
+        if (variacoes) {
+            const variacoesMap = variacoes.reduce((map, variacao) => {
+                map[variacao.id] = {
+                    id: variacao.id,
+                    nome: variacao.nome,
+                };
+                return map;
+            }, {});
+
+
+            return {variacoesMap};
+        } else {
+            return { message: 'Sucesso'}
+        }
+    } catch (e) {
+        return { error: e.message };
+    }
+};
+
 const store = async (req) => {
-    const { nome, categoria, variacao, descricao, preco, imagem } = req.body;
+    const { nome, categoria, variacao, descricao, preco, imagem, variacoes } = req.body;
 
     try {
+        const produtoExistente = await Produto.findOne({
+            where: {
+                [Op.and]: [
+                    { nome: { [Op.like]: `%${nome}%` } },
+                    { status: 1 }
+                ]
+            }
+        });
+
+        if (produtoExistente) {
+            return { error: 'Produto já existente' }
+        }
+
         const produto = await Produto.create({
             id_categoria: parseInt(categoria),
-            id_variacao: parseInt(variacao),
             nome: nome,
             descricao: descricao,
             preco: preco,
@@ -171,16 +232,39 @@ const store = async (req) => {
             await produto.save();
         }
 
+        const variacoesArray = JSON.parse(variacoes);
+        const variacoesNumericas = variacoesArray.map(Number);
+
+        const idRef = produto.id;
+
+        for (const variacaoNumero of variacoesNumericas) {
+            try {
+                const produtoFilho = await Produto.create({
+                    id_referencia: idRef,
+                    id_categoria: produto.id_categoria,
+                    id_variacao: variacaoNumero,
+                    nome: produto.nome,
+                    descricao: produto.descricao,
+                    preco: produto.preco,
+                    img: produto.img,
+                    status: produto.status,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
+
+            } catch (error) {
+                return { error: "Erro ao criar produto" };
+            }
+        }
+
         return true;
     } catch (e) {
-        console.log(e.message)
         return { error: "Erro ao criar produto" };
     }
 }
 
 const update = async (req) => {
-    console.log(123);
-    const { nome, categoria, variacao, descricao, preco, imagem, status, removeImg } = req.body;
+    const { nome, categoria, descricao, preco, imagem, status, removeImg, variacoes } = req.body;
     const { id } = req.params;
 
     try {
@@ -190,9 +274,25 @@ const update = async (req) => {
             return { error: "Item não encontrado" };
         }
 
+        if (nome) {
+            const produtoExistente = await Produto.findOne({
+                where: {
+                    [Op.and]: [
+                        { nome: { [Op.like]: `%${nome}%` } },
+                        { status: 1 },
+                        { id: { [Op.ne]: id } },
+                        { id_referencia: { [Op.ne]: id } }
+                    ]
+                }
+            });
+
+            if (produtoExistente) {
+                return { error: 'Produto já existente' }
+            }
+        }
+
         item.nome = nome || item.nome;
         item.id_categoria = categoria || item.id_categoria;
-        item.id_variacao = variacao || item.id_variacao;
         item.descricao = descricao || item.descricao;
         item.preco = preco || item.preco;
         item.status = status === false ? 0 : 1 || item.status;
@@ -224,6 +324,67 @@ const update = async (req) => {
 
         await item.save();
 
+        const idRef = item.id;
+        const img = item.img
+
+        const produtosFilhos = await Produto.findAll({
+            where: {
+                id_referencia: item.id,
+                status: 1
+            }
+        });
+
+        const variacoesArray = JSON.parse(variacoes);
+        const variacoesNumericas = variacoesArray.map(Number);
+        const variacoesAtivas = new Set(variacoesNumericas);
+
+        for (const produtoFilho of produtosFilhos) {
+            const variacaoId = produtoFilho.id_variacao;
+
+            if (!variacoesAtivas.has(variacaoId)) {
+                produtoFilho.status = 0;
+                produtoFilho.updatedAt = new Date();
+                await produtoFilho.save();
+            }
+        }
+
+        for (const variacaoNumero of variacoesNumericas) {
+            try {
+                const verifyProdutoFilho = await Produto.findOne({
+                    where: {
+                        id_referencia: item.id,
+                        id_variacao: variacaoNumero
+                    }
+                });
+
+                if (!verifyProdutoFilho) {
+                    const produtoFilho = await Produto.create({
+                        id_referencia: idRef,
+                        id_categoria: item.id_categoria,
+                        id_variacao: variacaoNumero,
+                        nome: item.nome,
+                        descricao: item.descricao,
+                        preco: item.preco,
+                        img: item.img,
+                        status: 1,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    });
+                } else {
+                    verifyProdutoFilho.nome = item.nome;
+                    verifyProdutoFilho.descricao = item.descricao;
+                    verifyProdutoFilho.preco = item.preco;
+                    verifyProdutoFilho.img = item.img;
+                    verifyProdutoFilho.status = item.status;
+                    verifyProdutoFilho.updatedAt = new Date();
+
+                    await verifyProdutoFilho.save();
+                }
+            } catch (e) {
+                console.error("Erro ao processar a variação:", e.message);
+            }
+        }
+
         return true;
     } catch (e) {
         return { error: "Erro ao atualizar produto" };
@@ -246,11 +407,24 @@ const destroy = async (req) => {
             }
         });
 
+        const produtosFilhos = await Produto.findAll({
+            where: {
+                id_referencia: id
+            }
+        });
+
         if (relacao) {
             item.status = 0;
             item.updatedAt = new Date();
 
             await item.save();
+
+            for (const produtoFilho of produtosFilhos) {
+                produtoFilho.status = 0;
+                produtoFilho.updatedAt = new Date();
+
+                await produtoFilho.save();
+            }
 
             return { message: 'Produto inativado devido a vínculos existentes' };
         } else {
@@ -263,6 +437,10 @@ const destroy = async (req) => {
 
                 item.img = null;
                 await item.save();
+            }
+
+            for (const produtoFilho of produtosFilhos) {
+                await produtoFilho.destroy();
             }
 
             await item.destroy();
@@ -297,4 +475,4 @@ const show = async (req) => {
     }
 }
 
-module.exports = { upload, index, store, update, destroy, show, indexHome, indexShop };
+module.exports = { upload, index, store, update, destroy, show, indexHome, indexShop, indexVariacoes };

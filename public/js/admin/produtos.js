@@ -38,133 +38,81 @@ document.querySelectorAll('.status-checkbox').forEach(checkbox => {
 });
 
 document.getElementById('newItem').addEventListener('click', function () {
+    // Primeiro, busca as categorias
     fetch('categorias?status=1', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => {
-            return response.json()
-        })
+        .then(response => response.json())
         .then(categorias => {
             const catOptions = categorias.itens.map(categoria => `
-                <option value="${categoria.id}">${categoria.nome}</option>
-            `).join('');
+            <option value="${categoria.id}">${categoria.nome}</option>
+        `).join('');
 
-            return fetch('variacoes?status=1', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
+            // Criação do modal de novo produto
+            Swal.fire({
+                title: 'Criar novo produto',
+                html: `
+                <form id="createForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="nome">Nome*</label>
+                        <input type="text" class="input" id="nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoria*</label>
+                        <select id="categoria" name="categoria" class="input" required>
+                            <option value="" disabled selected>Selecione uma categoria</option>
+                            ${catOptions}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <input type="text" class="input" id="descricao" name="descricao">
+                    </div>
+                    <div class="form-group">
+                        <label for="preco">Preço*</label>
+                        <input type="number" class="input" id="preco" name="preco" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagem">Foto</label>
+                        <input type="file" id="imagem" name="imagem">
+                    </div>
+                </form>
+            `,
+                showCancelButton: true,
+                confirmButtonText: 'Criar Produto',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn-dark-pattern',
+                    cancelButton: 'btn-light-pattern'
+                },
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+                    const categoria = document.getElementById('categoria').value;
+                    const descricao = document.getElementById('descricao').value;
+                    const preco = document.getElementById('preco').value;
+                    const imagem = document.getElementById('imagem').files[0];
+
+                    if (!nome || !categoria || !preco) {
+                        Swal.showValidationMessage('Por favor, preencha todos os campos obrigatórios.');
+                        return false;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('nome', nome);
+                    formData.append('categoria', categoria);
+                    formData.append('descricao', descricao);
+                    formData.append('preco', preco);
+
+                    if (imagem) {
+                        formData.append('imagem', imagem);
+                    }
+
+                    openVariacoesModal(formData, false);
                 }
-            })
-                .then(response => {
-                    return response.json()
-                })
-                .then(variacoes => {
-                    const varOptions = variacoes.itens.map(variacao => `
-                        <option value="${variacao.id}">${variacao.nome}</option>
-                    `).join('');
-
-                    Swal.fire({
-                        title: 'Criar novo produto',
-                        html: `
-                            <form id="createForm" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <label for="nome">Nome*</label>
-                                    <input type="text" class="input" id="nome" name="nome" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="categoria">Categoria*</label>
-                                    <select id="categoria" name="categoria" class="input" required>
-                                        <option value="" disabled selected>Selecione uma categoria</option>
-                                        ${catOptions}
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="variacao">Variação*</label>
-                                    <select id="variacao" name="variacao" class="input" required>
-                                        <option value="" disabled selected>Selecione uma variação</option>
-                                        ${varOptions}
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="descricao">Descrição</label>
-                                    <input type="text" class="input" id="descricao" name="descricao">
-                                </div>
-                                <div class="form-group">
-                                    <label for="preco">Preço*</label>
-                                    <input type="number" class="input" id="preco" name="preco" step="0.1" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="imagem">Foto</label>
-                                    <input type="file" id="imagem" name="imagem">
-                                </div>
-                            </form>
-                        `,
-                        showCancelButton: true,
-                        confirmButtonText: 'Confirmar',
-                        cancelButtonText: 'Cancelar',
-                        customClass: {
-                            confirmButton: 'btn-dark-pattern',
-                            cancelButton: 'btn-light-pattern'
-                        },
-                        preConfirm: () => {
-                            const nome = document.getElementById('nome').value;
-                            const categoria = document.getElementById('categoria').value;
-                            const variacao = document.getElementById('variacao').value;
-                            const descricao = document.getElementById('descricao').value;
-                            const preco = document.getElementById('preco').value;
-                            const imagem = document.getElementById('imagem').files[0];
-
-                            if (!nome || !categoria || !variacao || !preco) {
-                                Swal.showValidationMessage('Por favor, preencha todos os campos obrigatórios.');
-                                return false;
-                            }
-
-                            const formData = new FormData();
-
-                            formData.append('nome', nome);
-                            formData.append('categoria', categoria);
-                            formData.append('variacao', variacao);
-                            formData.append('descricao', descricao);
-                            formData.append('preco', preco);
-
-                            if (imagem) {
-                                formData.append('imagem', imagem);
-                            }
-
-                            return fetch('produtos', {
-                                method: 'POST',
-                                body: formData
-                            })
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Erro ao criar produto.');
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    Swal.fire({
-                                        title: 'Sucesso!',
-                                        text: data.message,
-                                        icon: 'success',
-                                        confirmButtonText: 'OK',
-                                        customClass: {
-                                            confirmButton: 'btn-dark-pattern',
-                                        }
-                                    });
-
-                                    setTimeout(() => {
-                                        location.reload();
-                                    }, 1500);
-                                })
-                                .catch(error => {
-                                    Swal.showValidationMessage(`Erro: ${error.message}`);
-                                });
-                        }
-                    });
-                });
+            });
         })
         .catch(error => {
             Swal.fire({
@@ -179,6 +127,209 @@ document.getElementById('newItem').addEventListener('click', function () {
         });
 });
 
+function openVariacoesModal(formData, produtoId) {
+    if (produtoId) {
+        fetch(`produtos/variacoes/${produtoId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(variacoesProduto => {
+                const variacoes = Object.values(variacoesProduto.itens);
+                const variacoesProdutoIds = variacoes.map(variacao => variacao.id);
+
+                fetch('variacoes?status=1', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(variacoes => {
+                        const varOptions = variacoes.itens.map(variacao => {
+                            const isChecked = variacoesProdutoIds.includes(variacao.id);
+                            return `
+                        <div class="form-group">
+                            <input type="checkbox" id="variacao_${variacao.id}" name="variacoes" value="${variacao.id}" ${isChecked ? 'checked' : ''}>
+                            <label for="variacao_${variacao.id}">${variacao.nome}</label>
+                        </div>
+                    `;
+                        }).join('');
+
+                        Swal.fire({
+                            title: 'Escolha as Variações',
+                            html: `
+                        <form id="variacaoForm">
+                            ${varOptions}
+                        </form>
+                    `,
+                            showCancelButton: true,
+                            confirmButtonText: 'Confirmar Variações',
+                            cancelButtonText: 'Cancelar',
+                            customClass: {
+                                confirmButton: 'btn-dark-pattern',
+                                cancelButton: 'btn-light-pattern'
+                            },
+                            preConfirm: () => {
+                                const variacoesSelecionadas = [];
+                                document.querySelectorAll('input[name="variacoes"]:checked').forEach(checkbox => {
+                                    variacoesSelecionadas.push(checkbox.value);
+                                });
+
+                                if (variacoesSelecionadas.length === 0) {
+                                    Swal.showValidationMessage('Por favor, selecione ao menos uma variação.');
+                                    return false;
+                                }
+
+                                formData.append('variacoes', JSON.stringify(variacoesSelecionadas));
+
+                                return fetch(`produtos/${produtoId}`, {
+                                    method: 'PUT',
+                                    body: formData
+                                })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error(response.error);
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        Swal.fire({
+                                            title: 'Sucesso!',
+                                            text: 'Variações associadas com sucesso!',
+                                            icon: 'success',
+                                            confirmButtonText: 'OK',
+                                            customClass: {
+                                                confirmButton: 'btn-dark-pattern',
+                                            }
+                                        });
+
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1500);
+                                    })
+                                    .catch(error => {
+                                        Swal.showValidationMessage(`Erro: ${error.message}`);
+                                    });
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: `Erro ao carregar as variações: ${error.message}`,
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                confirmButton: 'btn-dark-pattern',
+                            }
+                        });
+                    });
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Erro',
+                    text: `Erro ao carregar as variações associadas ao produto: ${error.message}`,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-dark-pattern',
+                    }
+                });
+            });
+
+    } else {
+        // Caso não tenha produtoId, apenas retorna as variações de status 1
+        fetch('variacoes?status=1', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(variacoes => {
+                const varOptions = variacoes.itens.map(variacao => `
+                <div class="form-group">
+                    <input type="checkbox" id="variacao_${variacao.id}" name="variacoes" value="${variacao.id}">
+                    <label for="variacao_${variacao.id}">${variacao.nome}</label>
+                </div>
+            `).join('');
+
+                Swal.fire({
+                    title: 'Escolha as Variações',
+                    html: `
+                    <form id="variacaoForm">
+                        ${varOptions}
+                    </form>
+                `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirmar Variações',
+                    cancelButtonText: 'Cancelar',
+                    customClass: {
+                        confirmButton: 'btn-dark-pattern',
+                        cancelButton: 'btn-light-pattern'
+                    },
+                    preConfirm: () => {
+                        const variacoesSelecionadas = [];
+                        document.querySelectorAll('input[name="variacoes"]:checked').forEach(checkbox => {
+                            variacoesSelecionadas.push(checkbox.value);
+                        });
+
+                        if (variacoesSelecionadas.length === 0) {
+                            Swal.showValidationMessage('Por favor, selecione ao menos uma variação.');
+                            return false;
+                        }
+
+                        formData.append('variacoes', JSON.stringify(variacoesSelecionadas));
+
+                        return fetch('produtos/', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(response.error);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                Swal.fire({
+                                    title: 'Sucesso!',
+                                    text: 'Variações associadas com sucesso!',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-dark-pattern',
+                                    }
+                                });
+
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
+                            })
+                            .catch(error => {
+                                Swal.showValidationMessage(`Erro: ${error.message}`);
+                            });
+                    }
+                });
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Erro',
+                    text: `Erro ao carregar as variações: ${error.message}`,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-dark-pattern',
+                    }
+                });
+            });
+    }
+}
+
+
 document.getElementById('itensContainer').addEventListener('click', function (event) {
     const target = event.target;
     const id = target.dataset.id;
@@ -188,17 +339,15 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
 
         Promise.all([
             fetch('categorias?status=1', { method: 'GET', headers: { 'Content-Type': 'application/json' } }).then(res => res.json()),
-            fetch('variacoes?status=1', { method: 'GET', headers: { 'Content-Type': 'application/json' } }).then(res => res.json())
         ])
-            .then(([categorias, variacoes]) => {
+            .then(([categorias]) => {
                 const catOptions = createOptions(categorias.itens);
-                const varOptions = createOptions(variacoes.itens);
 
                 return fetch(`produtos/${id}`, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
                     .then(res => res.json())
-                    .then(produto => ({ catOptions, varOptions, produto }));
+                    .then(produto => ({ catOptions, produto }));
             })
-            .then(({ catOptions, varOptions, produto }) => {
+            .then(({ catOptions, produto }) => {
                 Swal.fire({
                     title: 'Atualizar produto',
                     html: `
@@ -212,13 +361,6 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
                                 <select id="categoria" name="categoria" class="input">
                                     <option value="" disabled selected>${produto.categoria}</option>
                                     ${catOptions}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="variacao">Variação</label>
-                                <select id="variacao" name="variacao" class="input">
-                                    <option value="" disabled selected>${produto.variacao}</option>
-                                    ${varOptions}
                                 </select>
                             </div>
                             <div class="form-group">
@@ -246,7 +388,6 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
                     preConfirm: () => {
                         const nome = document.getElementById('nome').value;
                         const categoria = document.getElementById('categoria').value;
-                        const variacao = document.getElementById('variacao').value;
                         const descricao = document.getElementById('descricao').value;
                         const preco = document.getElementById('preco').value;
                         const imagem = document.getElementById('imagem').files[0];
@@ -254,7 +395,6 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
                         const formData = new FormData();
                         formData.append('nome', nome);
                         formData.append('categoria', categoria);
-                        formData.append('variacao', variacao);
                         formData.append('descricao', descricao);
                         formData.append('preco', preco);
 
@@ -262,34 +402,7 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
                             formData.append('imagem', imagem);
                         }
 
-                        return fetch(`produtos/${id}`, {
-                            method: 'PUT',
-                            body: formData
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Erro ao atualizar produto.');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                Swal.fire({
-                                    title: 'Sucesso!',
-                                    text: data.message,
-                                    icon: 'success',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-dark-pattern',
-                                    }
-                                });
-
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1500);
-                            })
-                            .catch(error => {
-                                Swal.showValidationMessage(`Erro: ${error.message}`);
-                            });
+                        openVariacoesModal(formData, id);
                     }
                 });
             })
