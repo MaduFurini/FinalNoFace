@@ -45,7 +45,6 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     const response = await update(req);
 
-    console.log(response)
     if (response) {
         res.status(200).json({ message: 'Funcionário atualizado com sucesso.' });
     } else {

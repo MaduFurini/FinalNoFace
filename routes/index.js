@@ -20,5 +20,6 @@ router.use('/admin/usuarios', usuariosRoutes);
 
 router.use('/', homeRoutes);
 router.use('/shop', homeRoutes);
+router.use('/produto', homeRoutes);
 
 module.exports = router;

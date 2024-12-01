@@ -324,7 +324,6 @@ function fetchItens(searchTerm = '') {
     fetch(`funcionarios?nome=${encodeURIComponent(searchTerm)}`)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             render(data);
             updatePagination(data.currentPage, data.totalPages);
         })

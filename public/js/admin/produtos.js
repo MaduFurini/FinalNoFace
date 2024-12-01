@@ -575,7 +575,6 @@ function removeImg(productId) {
                 body: JSON.stringify({ removeImg: true })
             })
                 .then(response => {
-                    console.log(response);
                     if (!response.ok) {
                         throw new Error('Erro ao remover a imagem');
                     }

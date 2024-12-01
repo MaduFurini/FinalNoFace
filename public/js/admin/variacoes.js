@@ -320,7 +320,3 @@ function updatePagination(currentPage, totalPages) {
 }
 
 fetchItens();
-
-function teste () {
-    console.log(1231231231)
-}

@@ -334,10 +334,17 @@ const update = async (req) => {
 
         const produtosFilhos = await Produto.findAll({
             where: {
-                id_referencia: item.id,
-                status: 1
+                id_referencia: item.id
             }
         });
+
+        if (status != null) {
+            for (const produtoFilho of produtosFilhos) {
+                produtoFilho.status = item.status;
+                produtoFilho.updatedAt = new Date();
+                await produtoFilho.save();
+            }
+        }
 
         const variacoesArray = JSON.parse(variacoes);
         const variacoesNumericas = variacoesArray.map(Number);
@@ -355,7 +362,7 @@ const update = async (req) => {
 
         for (const variacaoNumero of variacoesNumericas) {
             try {
-                const verifyProdutoFilho = await Produto.findOne({
+                let verifyProdutoFilho = await Produto.findOne({
                     where: {
                         id_referencia: item.id,
                         id_variacao: variacaoNumero
@@ -363,7 +370,7 @@ const update = async (req) => {
                 });
 
                 if (!verifyProdutoFilho) {
-                    const produtoFilho = await Produto.create({
+                    verifyProdutoFilho = await Produto.create({
                         id_referencia: idRef,
                         id_categoria: item.id_categoria,
                         id_variacao: variacaoNumero,
@@ -375,16 +382,8 @@ const update = async (req) => {
                         createdAt: new Date(),
                         updatedAt: new Date()
                     });
-                } else {
-                    verifyProdutoFilho.nome = item.nome;
-                    verifyProdutoFilho.descricao = item.descricao;
-                    verifyProdutoFilho.preco = item.preco;
-                    verifyProdutoFilho.img = item.img;
-                    verifyProdutoFilho.status = item.status;
-                    verifyProdutoFilho.updatedAt = new Date();
-
-                    await verifyProdutoFilho.save();
                 }
+
             } catch (e) {
                 console.error("Erro ao processar a variação:", e.message);
             }
@@ -480,4 +479,52 @@ const show = async (req) => {
     }
 }
 
-module.exports = { upload, index, store, update, destroy, show, indexHome, indexShop, indexVariacoes };
+const showShop = async (req) => {
+    const { id } = req.params;
+
+    try {
+        const item = await Produto.findByPk(id);
+
+        if (!item) {
+            return { error: 'Produto não encontrado' };
+        }
+
+        const categoria = await Categoria.findByPk(item.id_categoria);
+
+        const produtosFilhos = await Produto.findAll({
+            where: { id_referencia: id, status: 1 }
+        });
+
+        const idsVariacoes = produtosFilhos.map(filho => filho.id_variacao);
+
+        const variacoesEncontradas = await Variacao.findAll({
+            where: { id: idsVariacoes }
+        });
+
+        const mapaVariacoes = {};
+        variacoesEncontradas.forEach(variacao => {
+            mapaVariacoes[variacao.id] = variacao;
+        });
+
+        const variacoes = produtosFilhos.map(filho => ({
+            id: filho.id_variacao,
+            nome: mapaVariacoes[filho.id_variacao]
+                ? mapaVariacoes[filho.id_variacao].nome
+                : 'Variação não encontrada',
+            preco: filho.preco,
+            img: filho.img
+        }));
+
+        return {
+            ...item.dataValues,
+            categoria: categoria ? categoria.nome : 'Categoria não encontrada',
+            variacoes: variacoes.length > 0 ? variacoes : 'Sem variações disponíveis'
+        };
+    } catch (error) {
+        console.error('Erro ao buscar produto:', error);
+        return { error: 'Erro ao buscar produto' };
+    }
+};
+
+
+module.exports = { upload, index, store, update, destroy, show, indexHome, indexShop, indexVariacoes, showShop };

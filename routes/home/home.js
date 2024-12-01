@@ -3,7 +3,8 @@ const router = express.Router();
 
 const {
     indexHome,
-    indexShop
+    indexShop,
+    showShop
 } = require('../../controllers/produtoController')
 
 
@@ -19,12 +20,17 @@ router.get('/', async (req, res) => {
     });
 });
 
-
 router.get('/shop', async (req, res) => {
     const { categorias, produtosPorCategoria } = await indexShop(req, res);
 
-    console.log(categorias)
     res.render('home/shop', { categorias, produtosPorCategoria });
 });
+
+router.get('/:id', async (req, res) => {
+    const response = await showShop(req, res);
+
+    res.render('home/produto', { produto: response });
+});
+
 
 module.exports = router;
