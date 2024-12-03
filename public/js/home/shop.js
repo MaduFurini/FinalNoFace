@@ -10,11 +10,8 @@ document.querySelectorAll('.menu-item').forEach(item => {
 document.querySelectorAll('.spoiler').forEach(item => {
     item.addEventListener('click', function () {
         const largeImageUrl = item.getAttribute('src');
-        console.log(largeImageUrl)
 
         document.getElementById('selected-image').src = largeImageUrl;
-
-        console.log('Imagem trocada para:', largeImageUrl);
     });
 });
 

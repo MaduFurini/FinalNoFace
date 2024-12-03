@@ -107,7 +107,6 @@ const destroy = async (req) => {
             return { message: 'Categoria excluída' };
         }
     } catch (e) {
-        console.log(e.message);
         return { error: 'Erro ao excluir categoria' };
     }
 }

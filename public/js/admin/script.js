@@ -89,3 +89,9 @@ switchMode.addEventListener('change', function () {
         localStorage.setItem('darkMode', 'false');
     }
 });
+
+document.querySelectorAll('.logout').forEach(sairBtn => {
+    sairBtn.addEventListener('click', function () {
+          window.location.href = '/noFace/login/sair';
+    });
+})

@@ -34,7 +34,6 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const response = await store(req);
 
-    console.log(response.error)
     if (!response.error) {
         res.status(200).json({ message: 'Funcionário criado com sucesso.' });
     } else {

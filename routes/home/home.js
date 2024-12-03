@@ -10,13 +10,15 @@ const {
 
 router.get('/', async (req, res) => {
     const response = await indexHome(req);
+    const user = req.session || null;
 
     if (response.error) {
         return res.status(500).json({ message: response.error });
     }
 
     res.render('home/home', {
-        itens: response.itens
+        itens: response.itens,
+        user: user
     });
 });
 
