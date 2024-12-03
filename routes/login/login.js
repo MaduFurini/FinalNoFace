@@ -59,7 +59,7 @@ router.get('/sair', async (req, res) => {
     res.clearCookie('token', { httpOnly: true });
     req.session.user = null;
 
-    res.redirect('/noFace/');
+    res.redirect('/noFace/home');
 });
 
 

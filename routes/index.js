@@ -21,7 +21,7 @@ router.use('/admin/usuarios', usuariosRoutes);
 
 router.use('/login', loginRoutes);
 
-router.use('/', homeRoutes);
+router.use('/home', homeRoutes);
 router.use('/shop', homeRoutes);
 router.use('/produto', homeRoutes);
 
