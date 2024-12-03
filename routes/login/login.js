@@ -25,7 +25,7 @@ router.post('/newUser', async (req, res) => {
 
             res.cookie('token', response.token, { httpOnly: true });
 
-            return res.redirect('/noFace/');
+            return res.redirect('/noFace/home');
         }
 
         res.render('login/login', { error: 'Erro ao autenticar usuário. Verifique os dados e tente novamente.' });
@@ -46,7 +46,7 @@ router.post('/entrar', async (req, res) => {
 
             res.cookie('token', response.token, { httpOnly: true });
 
-            return res.redirect('/noFace/');
+            return res.redirect('/noFace/home');
         }
 
         res.render('login/login', { error: 'Erro ao autenticar usuário. Verifique os dados e tente novamente.' });
