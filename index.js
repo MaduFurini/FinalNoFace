@@ -29,6 +29,10 @@ app.use(session({
 
 app.use('/noFace/', routes);
 
+app.use((req, res) => {
+    res.status(404).render('error/pageNotFound', { url: req.originalUrl });
+});
+
 app.listen('3000', function (e) {
     if (e) {
         console.log(e);
