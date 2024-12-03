@@ -32,7 +32,7 @@
                 <% itens.forEach(item => { %>
                     <div class="flex flex-col justify-between items-center gap-3 w-52 h-full">
                         <a href="produto/<%= item.id %>" class="w-full h-64 flex justify-center items-center overflow-hidden rounded-xl border border-black hover:opacity-85">
-                            <img src="<%= item.img %>" alt="" class="w-full h-full object-cover" />
+                            <img src="<%= item.img %>" alt="" class="w-full h-full object-cover rounded-xl" />
                         </a>
                         <form action="produto/<%= item.id %>" method="post">
                             <p class="text-xl font-bold"><%= item.nome %></p>
@@ -54,7 +54,7 @@
             <div class="text">
                 <h1>Explore a essência urbana em cada detalhe</h1>
                 <p>Fortalecendo a autoexpressão através do estilo e do lifestyle urbano</p>
-                <a href="/portfolio" class="btn">Conheça nosso portfólio</a>
+                <a href="/noFace/portfolio" class="btn">Conheça nosso portfólio</a>
             </div>
             <div class="image-container">
                 <img src="/images/homePageModel.png" alt="Modelo 3D" class="image">
