@@ -11,6 +11,7 @@ document.querySelectorAll('.status-checkbox').forEach(checkbox => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'x-internal-request': 'true'
             },
             body: JSON.stringify({ status: newStatus })
         })
@@ -101,7 +102,8 @@ document.getElementById('newItem').addEventListener('click', function () {
                 const response = await fetch('funcionarios', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'x-internal-request': 'true'
                     },
                     body: JSON.stringify({ nome, email, cpf, senha })
                 });
@@ -140,7 +142,11 @@ document.getElementById('itensContainer').addEventListener('click', async functi
         const id = target.dataset.id;
 
         try {
-            const response = await fetch(`funcionarios/${id}`);
+            const response = await fetch(`funcionarios/${id}`, {
+                headers: {
+                    'x-internal-request': 'true'
+                }
+            });
             const item = await response.json();
 
             if (item) {
@@ -203,7 +209,8 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                             const updateResponse = await fetch(`funcionarios/${id}`, {
                                 method: 'PUT',
                                 headers: {
-                                    'Content-Type': 'application/json'
+                                    'Content-Type': 'application/json',
+                                    'x-internal-request': 'true'
                                 },
                                 body: JSON.stringify({nome, email, cpf, senha})
                             });
@@ -303,7 +310,11 @@ document.getElementById('itensContainer').addEventListener('click', async functi
 document.getElementById('searchInput').addEventListener('input', function () {
     const searchTerm = document.getElementById('searchInput').value;
 
-    fetch(`funcionarios?nome=${encodeURIComponent(searchTerm)}`)
+    fetch(`funcionarios?nome=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+            'x-internal-request': 'true'
+        }
+    })
         .then(response => response.json())
         .then(data => {
             render(data);
@@ -321,7 +332,11 @@ document.getElementById('clean').addEventListener('click', function () {
 });
 
 function fetchItens(searchTerm = '') {
-    fetch(`funcionarios?nome=${encodeURIComponent(searchTerm)}`)
+    fetch(`funcionarios?nome=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+            'x-internal-request': 'true'
+        }
+    })
         .then(response => response.json())
         .then(data => {
             render(data);

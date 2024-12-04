@@ -11,6 +11,7 @@ document.querySelectorAll('.status-checkbox').forEach(checkbox => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'x-internal-request': 'true'
             },
             body: JSON.stringify({ status: newStatus })
         })
@@ -42,7 +43,8 @@ document.getElementById('newItem').addEventListener('click', function () {
     fetch('categorias?status=1', {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-internal-request': 'true'
         }
     })
         .then(response => response.json())
@@ -132,7 +134,8 @@ function openVariacoesModal(formData, produtoId) {
         fetch(`produtos/variacoes/${produtoId}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-internal-request': 'true'
             }
         })
             .then(response => response.json())
@@ -143,7 +146,8 @@ function openVariacoesModal(formData, produtoId) {
                 fetch('variacoes?status=1', {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'x-internal-request': 'true'
                     }
                 })
                     .then(response => response.json())
@@ -187,6 +191,9 @@ function openVariacoesModal(formData, produtoId) {
 
                                 return fetch(`produtos/${produtoId}`, {
                                     method: 'PUT',
+                                    headers: {
+                                        'x-internal-request': 'true'
+                                    },
                                     body: formData
                                 })
                                     .then(response => {
@@ -245,7 +252,8 @@ function openVariacoesModal(formData, produtoId) {
         fetch('variacoes?status=1', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-internal-request': 'true'
             }
         })
             .then(response => response.json())
@@ -286,6 +294,9 @@ function openVariacoesModal(formData, produtoId) {
 
                         return fetch('produtos/', {
                             method: 'POST',
+                            headers: {
+                                'x-internal-request': 'true'
+                            },
                             body: formData
                         })
                             .then(response => {
@@ -338,12 +349,12 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
         const createOptions = (items) => items.map(item => `<option value="${item.id}">${item.nome}</option>`).join('');
 
         Promise.all([
-            fetch('categorias?status=1', { method: 'GET', headers: { 'Content-Type': 'application/json' } }).then(res => res.json()),
+            fetch('categorias?status=1', { method: 'GET', headers: { 'Content-Type': 'application/json', 'x-internal-request': 'true' } }).then(res => res.json()),
         ])
             .then(([categorias]) => {
                 const catOptions = createOptions(categorias.itens);
 
-                return fetch(`produtos/${id}`, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
+                return fetch(`produtos/${id}`, { method: 'GET', headers: { 'Content-Type': 'application/json', 'x-internal-request': 'true' } })
                     .then(res => res.json())
                     .then(produto => ({ catOptions, produto }));
             })
@@ -435,7 +446,8 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
                 return fetch(`produtos/${id}`, {
                     method: 'DELETE',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'x-internal-request': 'true'
                     },
                 })
                     .then(response => {
@@ -472,7 +484,11 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
 document.getElementById('searchInput').addEventListener('input', function () {
     const searchTerm = document.getElementById('searchInput').value;
 
-    fetch(`produtos?nome=${encodeURIComponent(searchTerm)}`)
+    fetch(`produtos?nome=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+            'x-internal-request': 'true'
+        }
+    })
         .then(response => response.json())
         .then(data => {
             render(data);
@@ -490,7 +506,11 @@ document.getElementById('clean').addEventListener('click', function () {
 });
 
 function fetchItens(searchTerm = '') {
-    fetch(`produtos?nome=${encodeURIComponent(searchTerm)}`)
+    fetch(`produtos?nome=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+            'x-internal-request': 'true'
+        }
+    })
         .then(response => response.json())
         .then(data => {
             render(data);
@@ -570,7 +590,8 @@ function removeImg(productId) {
             fetch(`produtos/${productId}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'x-internal-request': 'true'
                 },
                 body: JSON.stringify({ removeImg: true })
             })

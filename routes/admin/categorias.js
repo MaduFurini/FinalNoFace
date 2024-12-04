@@ -9,6 +9,11 @@ const {
     show
 } = require('../../controllers/categoriaController')
 
+const {
+    blockDirectAccess
+} = require('../../middlewares/blockAcess')
+
+
 router.get('/', async (req, res) => {
     const response = await index(req);
 
@@ -31,7 +36,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', blockDirectAccess, async (req, res) => {
     const response = await store(req);
 
     if (response) {
@@ -41,7 +46,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', blockDirectAccess, async (req, res) => {
     const response = await update(req);
 
     if (response) {
@@ -51,7 +56,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', blockDirectAccess, async (req, res) => {
     const response = await show(req);
 
     if (response) {
@@ -61,7 +66,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', blockDirectAccess, async (req, res) => {
     const response = await destroy(req);
 
     if (response.message) {

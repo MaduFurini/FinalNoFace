@@ -9,7 +9,11 @@ document.getElementById('itensContainer').addEventListener('click', async functi
         const id = target.dataset.id;
 
         try {
-            const response = await fetch(`pedidos/${id}`);
+            const response = await fetch(`pedidos/${id}`, {
+                headers: {
+                    'x-internal-request': 'true'
+                }
+            });
             const item = await response.json();
 
             if (item) {
@@ -82,7 +86,8 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                             const updateResponse = await fetch(`pedidos/${id}`, {
                                 method: 'PUT',
                                 headers: {
-                                    'Content-Type': 'application/json'
+                                    'Content-Type': 'application/json',
+                                    'x-internal-request': 'true'
                                 },
                                 body: JSON.stringify({ status, obs, formaPag })
                             });
@@ -182,7 +187,11 @@ document.getElementById('itensContainer').addEventListener('click', async functi
 document.getElementById('searchInput').addEventListener('input', function () {
     const searchTerm = document.getElementById('searchInput').value;
 
-    fetch(`pedidos?codigo=${encodeURIComponent(searchTerm)}`)
+    fetch(`pedidos?codigo=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+            'x-internal-request': 'true'
+        }
+    })
         .then(response => response.json())
         .then(data => {
             render(data);
@@ -200,7 +209,11 @@ document.getElementById('clean').addEventListener('click', function () {
 });
 
 function fetchItens(searchTerm = '') {
-    fetch(`pedidos?codigo=${encodeURIComponent(searchTerm)}`)
+    fetch(`pedidos?codigo=${encodeURIComponent(searchTerm)}`, {
+        headers: {
+            'x-internal-request': 'true'
+        }
+    })
         .then(response => response.json())
         .then(data => {
             render(data);
@@ -312,7 +325,11 @@ function buscarCliente(element) {
 
     mostrarTooltip(element, 'Carregando...');
 
-    fetch(`usuarios/${usuarioId}`)
+    fetch(`usuarios/${usuarioId}`, {
+        headers: {
+            'x-internal-request': 'true'
+        }
+    })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erro ao buscar usuário');
@@ -344,7 +361,11 @@ function buscarPedido(element) {
 
     mostrarTooltip(element, 'Carregando...');
 
-    fetch(`pedidos/produtos/${pedidoId}`)
+    fetch(`pedidos/produtos/${pedidoId}`, {
+        headers: {
+            'x-internal-request': 'true'
+        }
+    })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Erro ao buscar produtos');
