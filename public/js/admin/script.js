@@ -95,11 +95,3 @@ document.querySelectorAll('.logout').forEach(sairBtn => {
           window.location.href = '/noFace/login/sair';
     });
 })
-
-window.addEventListener('load', function () {
-    if (window.location) {
-        const urlWithoutHash = window.location.href.split('#')[0];
-        console.log(urlWithoutHash)
-        history.replaceState(null, null, urlWithoutHash);
-    }
-});

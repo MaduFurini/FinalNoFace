@@ -105,12 +105,12 @@ const indexHome = async (req) => {
         const result = await Produto.findAndCountAll({
             where: {
                 status: 1,
-                img: {
-                    [Op.and]: [
-                        { [Op.ne]: null },
-                        { [Op.ne]: '' }
-                    ]
-                },
+                // img: {
+                //     [Op.and]: [
+                //         { [Op.ne]: null },
+                //         { [Op.ne]: '' }
+                //     ]
+                // },
                 id_referencia: {
                     [Op.is]: null
                 }
@@ -480,7 +480,7 @@ const show = async (req) => {
 }
 
 const showShop = async (req) => {
-    const { id } = req.params;
+    const id  = req.session.data.parameter;
 
     try {
         const item = await Produto.findByPk(id);

@@ -70,7 +70,7 @@ router.put('/:id', upload.single('imagem'), blockDirectAccess, async (req, res) 
     }
 });
 
-router.get('/:id', blockDirectAccess, async (req, res) => {
+router.get('/:id', async (req, res) => {
     const response = await show(req);
 
     if (response) {

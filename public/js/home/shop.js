@@ -2,16 +2,21 @@ document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', function () {
         const produtoId = this.dataset.id;
 
-
-        window.location.href = `produto/${produtoId}`;
+        fetch(`/set`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ parameter: produtoId })
+        }).then(data => {
+            window.location.href = 'produto';
+        })
     });
 });
 
 document.querySelectorAll('.spoiler').forEach(item => {
     item.addEventListener('click', function () {
-        const largeImageUrl = item.getAttribute('src');
-
-        document.getElementById('selected-image').src = largeImageUrl;
+        document.getElementById('selected-image').src = item.getAttribute('src');
     });
 });
 

@@ -33,7 +33,7 @@
                                     <p class="descricao" style="visibility: hidden;">&nbsp;</p>
                                 <% } %>
                                 <p class="preco">R$ <%= produto.preco.toFixed(2) %></p>
-                                <input id="produtoId" type="hidden" data-id="<%= produto.id %>">
+                                <input id="dataItem" name="dataItem" type="hidden" data-id="<%= produto.id %>">
                             </div>
                         <% }) %>
                     </div>
@@ -62,6 +62,6 @@
         </div>
     </div>
 
-    <script src="/js/users/menu.js"></script>
+    <script src="/js/home/menu.js"></script>
     <script src="/js/home/shop.js"></script>
     <%- include('../partials/footer.ejs') %>

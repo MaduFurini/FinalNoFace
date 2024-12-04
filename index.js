@@ -27,6 +27,20 @@ app.use(session({
     }
 }));
 
+app.post('/set', (req, res) => {
+    const { parameter } = req.body;
+
+    if (parameter != null) {
+        req.session.data = {
+            parameter: parameter
+        };
+    } else {
+        req.session.data = null;
+    }
+
+    return res.json({ success: true });
+});
+
 app.use('/noFace/', routes);
 
 app.use((req, res) => {

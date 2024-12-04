@@ -22,6 +22,5 @@ router.use('/admin/usuarios', usuariosRoutes);
 router.use('/login', loginRoutes);
 
 router.use('/home', homeRoutes);
-router.use('/produto', homeRoutes);
 
 module.exports = router;

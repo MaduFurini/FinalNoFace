@@ -28,7 +28,7 @@ router.get('/shop', async (req, res) => {
     res.render('home/shop', { categorias, produtosPorCategoria });
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/produto', async (req, res) => {
     const response = await showShop(req, res);
 
     res.render('home/produto', { produto: response });
