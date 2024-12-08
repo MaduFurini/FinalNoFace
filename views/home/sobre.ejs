@@ -7,16 +7,20 @@
         <link rel="stylesheet" href="/css/assets/style.css">
         <link rel="stylesheet" href="/css/home/sobre.css">
         <link rel="shortcut icon" href="/images/dark_noFaceLogo.png">
+        <script src="/js/home/menu.js"></script>
 
         <title>NoFace | Shop</title>
     </head>
-    <%- include('../partials/header.ejs') %>
-    <div class="bg-cover flex-grow h-full bg-[url('/images/IMG_0241.jpg')] bg-center">
-        <div class="backdrop-blur-lg">
-            <div class="py-52 md:py-72 h-svh text-center text-white">
-                <p class="text-lg">Vista a nossa luta. Seja</p>
-                <p class="text-5xl md:text-7xl font-bold">NOFACE</p>
-            </div>
+    <div class="relative">
+        <div id="header" class="absolute z-10 w-full">
+            <%- include('../partials/header.ejs') %>
+        </div>
+        <div class="bg-cover flex-grow h-full bg-[url('/images/IMG_0241.jpg')] bg-center">
+            <div class="backdrop-blur-lg">
+                <div class="py-52 md:py-72 h-svh text-center text-white">
+                    <p class="text-lg">Vista a nossa luta. Seja</p>
+                    <p class="text-5xl md:text-7xl font-bold">NOFACE</p>
+                </div>
             <div class="relative flex flex-col mx-12 items-center pb-20 text-justify md:mx-auto md:max-w-[40rem] lg:max-w-[50rem] xl:max-w-[70rem]">
                 <div class="flex flex-col lg:flex-row justify-between items-center gap-14 lg:gap-0">
                     <div class="order-2 lg:order-1 rounded-xl text-white p-5 bg-opacity-30 bg-black lg:w-[40%] place-self-start">
@@ -40,6 +44,8 @@
                 </div>
             </div>
         </div>
+        </div>
+        <div id="footer">
+            <%- include('../partials/footer.ejs') %>
+        </div>
     </div>
-      
-    <%- include('../partials/footer.ejs') %>
