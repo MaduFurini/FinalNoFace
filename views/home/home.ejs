@@ -77,20 +77,7 @@
                     if (userTipo === 'admin') {
                         cadastroButton.textContent = 'Painel de Controle';
                         cadastroButton.href = 'admin/pedidos';
-                    } else if (userTipo === 'cliente') {
-                        const nav = document.getElementById('navbar');
-
-                        const pedidoButton = document.createElement('a');
-                        pedidoButton.textContent = 'Perfil';
-                        pedidoButton.href = `cliente/perfil/${userData.id}`;
-
-                        cadastroButton.textContent = 'Sair';
-                        cadastroButton.href = '/sair';
-
-                        nav.insertBefore(pedidoButton, cadastroButton);
                     }
-                } else {
-                    cadastroButton.textContent = 'Cadastre-se';
                 }
 
                 const menuLink = document.getElementById('menuLink');
