@@ -78,6 +78,19 @@
 			<div class="head-title">
 				<div class="left">
 					<h1>Pedidos</h1>
+
+                    <div class="filter-container">
+                        <label for="statusFilter">Filtrar por Status:</label>
+                        <select id="statusFilter" onchange="filtrarPedidosPorStatus()">
+                            <option value="">Todos</option>
+                            <option value="Realizado">Realizado</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Em entrega">Em entrega</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                            <option value="Inativado">Inativado</option>
+                        </select>
+                    </div>
 				</div>
 			</div>
 
@@ -87,7 +100,6 @@
 						<thead>
 							<tr>
                                 <th>Código</th>
-								<th>Cliente</th>
                                 <th>Informações</th>
                                 <th>Valor total</th>
                                 <th>Forma pagamento</th>
@@ -102,19 +114,6 @@
                                 <% itens.forEach(item => { %>
                                     <tr>
                                         <td><%= item.codigo %></td>
-                                        <td style="position: relative;">
-                                          <span
-                                            class="material-symbols-sharp info-icon"
-                                            style="color: blue; cursor: pointer;"
-                                            data-id="<%= item.id_usuario %>"
-                                            onmouseover="buscarCliente(this)"
-                                            onmouseout="esconderTooltip(this)">
-                                            info
-                                          </span>
-                                          <div class="tooltip" style="display: none;">
-                                            Carregando...
-                                          </div>
-                                        </td>
                                         <td style="position: relative;">
                                           <span
                                             class="material-symbols-sharp info-icon"
@@ -145,6 +144,7 @@
                                         </td>
                                         <td>
                                             <button id="editBtn" class="btn btn-dark" style="margin-right: 5px;" data-id="<%= item.id %>">Editar</button>
+                                            <button id="deleteBtn" class="btn btn-danger" data-id="<%= item.id %>">Excluir</button>
                                         </td>
                                     </tr>
                                 <% }); %>

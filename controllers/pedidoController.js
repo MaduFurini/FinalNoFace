@@ -128,24 +128,9 @@ const destroy = async (req) => {
             return { error: 'Pedido não encontrado' };
         }
 
-        const relacao = await ProdutoPedido.findOne({
-            where: {
-                id_pedido: id
-            }
-        });
+        await item.destroy();
 
-        if (relacao) {
-            item.status = 0;
-            item.updatedAt = new Date();
-
-            await item.save();
-
-            return { message: 'Pedido inativado devido a vínculos existentes' };
-        } else {
-            await item.destroy();
-
-            return { message: 'Pedido excluído' };
-        }
+        return { message: 'Pedido excluído' };
     } catch (e) {
         return { error: 'Erro ao inativar pedido' };
     }

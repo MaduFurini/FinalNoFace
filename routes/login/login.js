@@ -13,27 +13,6 @@ router.get('/', async (req, res) => {
     res.render('login/login', { error: error });
 });
 
-router.post('/newUser', async (req, res) => {
-    try {
-        const response = await store(req);
-
-        if (response.user && response.token) {
-            req.session.user = {
-                id: response.user.id,
-                tipo_usuario: response.user.tipo_usuario,
-            };
-
-            res.cookie('token', response.token, { httpOnly: true });
-
-            return res.redirect('/noFace/home');
-        }
-
-        res.render('login/login', { error: 'Erro ao autenticar usuário. Verifique os dados e tente novamente.' });
-    } catch (error) {
-        res.render('login/login', { error: error.message || 'Erro inesperado. Por favor, tente novamente mais tarde.' });
-    }
-});
-
 router.post('/entrar', async (req, res) => {
     try {
         const response = await login(req);
@@ -46,7 +25,7 @@ router.post('/entrar', async (req, res) => {
 
             res.cookie('token', response.token, { httpOnly: true });
 
-            return res.redirect('/noFace/home');
+            return res.redirect('/noFace/admin/pedidos');
         }
 
         res.render('login/login', { error: 'Erro ao autenticar usuário. Verifique os dados e tente novamente.' });

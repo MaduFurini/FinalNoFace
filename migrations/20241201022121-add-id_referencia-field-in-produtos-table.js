@@ -6,6 +6,7 @@ module.exports = {
     await queryInterface.addColumn('produtos', 'id_referencia', {
       type: Sequelize.INTEGER,
       allowNull: true,
+      name: 'produtos_id_referencia_foreign_idx',
       references: {
         model: 'produtos',
         key: 'id'
@@ -26,7 +27,7 @@ module.exports = {
 
     await queryInterface.changeColumn('produtos', 'id_variacao', {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: true
     });
   }
 };
