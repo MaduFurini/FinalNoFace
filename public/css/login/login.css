@@ -25,6 +25,7 @@ body{
     justify-content: center;
     align-items: center;
     text-align: center;
+    flex-direction: column;
     width: 768px;
     color: white;
     max-width: 100%;
@@ -59,7 +60,7 @@ body{
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    margin-top: 10px;
+    margin: 20px 0;
     cursor: pointer;
 }
 
@@ -71,15 +72,47 @@ body{
 .container input{
     background-color: #eee;
     border: none;
-    margin: 8px 0;
+    margin: 8px 10px;
     padding: 10px 15px;
     font-size: 13px;
     border-radius: 8px;
-    width: 100%;
+    width: 80%;
     outline: none;
 }
 
-.container button:hover {
+.container button:hover,
+.form-container a:last-child:hover{
     transform: scale(1.1);
     transition: 0.5s;
 }
+
+.form-container a:last-child {
+    color: white;
+    text-decoration: underline;
+}
+
+.brand img {
+    width: 20%;
+    margin-bottom: 5vh;
+}
+
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+#confirmPassword {
+    width: 80%;
+    padding-right: 30px;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 90px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: black;
+}
+

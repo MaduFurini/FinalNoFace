@@ -17,3 +17,17 @@ window.onload = function () {
         });
     }
 };
+
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('confirmPassword');
+
+togglePassword.addEventListener('click', function () {
+    const type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type = type;
+
+    if (type === 'password') {
+        togglePassword.innerHTML = '&#128065;';
+    } else {
+        togglePassword.innerHTML = '&#128064;';
+    }
+});

@@ -1,17 +1,16 @@
 // IMPORTAÇÃO DE DEPENDÊNCIAS
 const express = require('express');
-const path = require('path');
-const bcrypt = require('bcrypt');
-const fs = require("fs");
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const db = require('./db');
 const routes = require('./routes');
+require('dotenv').config();
 
 // CONFIGURAÇÕES DE SERVIDOR
 const app = express();
-const router = express.Router();
+
+const {
+    noCache
+} = require("./middlewares/auth");
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
@@ -23,6 +22,7 @@ app.use(session({
     cookie: {
         maxAge: 60 * 60 * 1000,
         httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
     }
 }));
 app.use(
@@ -49,7 +49,7 @@ app.post('/set', (req, res) => {
     return res.json({ success: true });
 });
 
-app.use('/noFace/', routes);
+app.use('/noFace/', noCache, routes);
 
 app.use((req, res) => {
     res.status(404).render('error/pageNotFound', { url: req.originalUrl });

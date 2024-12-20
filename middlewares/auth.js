@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Token = require('../models/personalAccessTokens');
+require('dotenv').config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -20,7 +21,6 @@ const authMiddleware = async (req, res, next) => {
 
     const token = tokenCookie.split('=')[1];
 
-    console.log(token)
     if (!token) {
         return res.redirect('/noFace/login?error=Usuário não autenticado');
     }
@@ -85,4 +85,11 @@ const verifyUserAbility = async (req, res, next) => {
     }
 };
 
-module.exports = { authMiddleware, verifyUserAbility };
+const noCache = (req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+};
+
+module.exports = { authMiddleware, verifyUserAbility, noCache };
