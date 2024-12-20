@@ -14,11 +14,10 @@ const app = express();
 const router = express.Router();
 
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
-    secret: 'exerIsTGHyhAPfuWDgjqWw',
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -26,6 +25,15 @@ app.use(session({
         httpOnly: true,
     }
 }));
+app.use(
+    express.static('public', {
+        setHeaders: (res, path) => {
+            if (path.endsWith('.env')) {
+                res.status(403).end();
+            }
+        }
+    })
+);
 
 app.post('/set', (req, res) => {
     const { parameter } = req.body;

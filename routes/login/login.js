@@ -8,7 +8,7 @@ const {
 
 
 router.get('/', async (req, res) => {
-    const { error } = req.body || null;
+    const { error } = req.body || req.query || null;
 
     res.render('login/login', { error: error });
 });
