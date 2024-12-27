@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.75">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/css/assets/style.css">
+        <link rel="stylesheet" href="/css/home/sobre.css">
+        <link rel="shortcut icon" href="/images/dark_noFaceLogo.png">
+        <script src="/js/home/menu.js"></script>
+
+        <title>NoFace | Shop</title>
+    </head>
+    <div class="relative">
+        <div id="header" class="absolute z-10 w-full">
+            <%- include('../partials/header.ejs') %>
+        </div>
+        <div class="bg-cover flex-grow h-full bg-[url('/images/IMG_0241.jpg')] bg-center">
+            <div class="backdrop-blur-lg">
+                <div class="py-52 md:py-72 h-svh text-center text-white">
+                    <p class="text-lg">Vista a nossa luta. Seja</p>
+                    <p class="text-5xl md:text-7xl font-bold">NOFACE</p>
+                </div>
+            <div class="relative flex flex-col mx-12 items-center pb-20 text-justify md:mx-auto md:max-w-[40rem] lg:max-w-[50rem] xl:max-w-[70rem]">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-14 lg:gap-0">
+                    <div class="order-2 lg:order-1 rounded-xl text-white p-5 bg-opacity-30 bg-black lg:w-[40%] place-self-start">
+                        <p class="text-lg">A NOFACE nasceu no coração das ruas, inspirada pelo grafite, pelo skate e pelo hip-hop, elementos que carregam a essência da resistência e da expressão. Somos mais do que uma marca de streetwear: somos a representação da realidade crua e autêntica do nosso contexto social.</p>
+                    </div>
+                    <img src="/images/stayNoFaceLogo.png" alt="" class="w-52 mx-32 order-1 lg:order-2">
+                </div>
+                
+                <div class="flex flex-col lg:flex-row justify-between items-center mt-7 gap-7 lg:mt-44">
+                    <img src="/images/noface_escrita2.png" alt="" class="w-48 mx-32">
+                    <div class="rounded-xl p-5 bg-opacity-20 bg-white lg:w-[50%] place-self-end">
+                        <p class="text-lg">Nós, pretos, sabemos o peso de ter que ser dez vezes melhores para conquistar nosso espaço em um sistema que constantemente nos invisibiliza. Por isso, a NOFACE foi criada: para dar voz e destaque àqueles que o sistema tenta silenciar. Somos a manifestação mais pura da contra-cultura, desafiando quem nos quer por baixo e exaltando nossa autoestima.</p>
+                    </div>
+                </div>
+                <div class="w-44 md:w-52 mx-auto my-16 lg:my-32">
+                    <img src="/images/light_noFaceLogo.png" alt="" class="w-full h-full">
+                </div>
+                <div class="flex flex-col md:flex-row gap-10 p-5 items-center rounded-xl bg-black text-white bg-opacity-50">
+                    <p class="text-lg lg:px-12">Estamos aqui para ocupar espaços que dizem não ser nossos, para aparecer onde não nos querem, e para fortalecer aqueles que compartilham da nossa luta. A NOFACE é sobre união, resistência e transformação. Vista nossa luta. Seja NOFACE.</p>
+                    <img src="/images/noface_escrita.webp" alt="" class="w-[40%] md:w-[30%] lg:w-[20%] h-full">
+                </div>
+            </div>
+        </div>
+        </div>
+        <div id="footer">
+            <%- include('../partials/footer.ejs') %>
+        </div>
+    </div>

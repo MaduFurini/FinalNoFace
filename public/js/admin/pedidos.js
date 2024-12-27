@@ -133,56 +133,57 @@ document.getElementById('itensContainer').addEventListener('click', async functi
 });
 
 
-// document.getElementById('deleteBtn').addEventListener('click', function () {
-//     const id = document.getElementById('deleteBtn').dataset.id;
-//
-//     Swal.fire({
-//         title: 'Tem certeza?',
-//         text: "Essa ação não pode ser desfeita!",
-//         icon: 'warning',
-//         showCancelButton: true,
-//         confirmButtonText: 'Sim, excluir!',
-//         cancelButtonText: 'Cancelar',
-//         customClass: {
-//             confirmButton: 'btn-dark-pattern',
-//             cancelButton: 'btn-light-pattern'
-//         },
-//
-//         preConfirm: () => {
-//             return fetch(`funcionarios/${id}`, {
-//                 method: 'DELETE',
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 },
-//             })
-//                 .then(response => {
-//                     if (!response.ok) {
-//                         throw new Error('Erro ao excluir funcionário.');
-//                     }
-//
-//                     return response.json();
-//                 })
-//                 .then(data => {
-//                     Swal.fire({
-//                         title: 'Sucesso!',
-//                         text: data.message,
-//                         icon: 'success',
-//                         confirmButtonText: 'OK',
-//                         customClass: {
-//                             confirmButton: 'btn-dark-pattern',
-//                         }
-//                     });
-//
-//                     setTimeout(() => {
-//                         location.reload();
-//                     }, 1500);
-//                 })
-//                 .catch(error => {
-//                     Swal.showValidationMessage(`Erro: ${error.message}`);
-//                 });
-//         }
-//     })
-// });
+document.getElementById('deleteBtn').addEventListener('click', function () {
+    const id = document.getElementById('deleteBtn').dataset.id;
+
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Essa ação não pode ser desfeita!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn-dark-pattern',
+            cancelButton: 'btn-light-pattern'
+        },
+
+        preConfirm: () => {
+            return fetch(`pedidos/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-internal-request': 'true'
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao excluir pedido.');
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    Swal.fire({
+                        title: 'Sucesso!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-dark-pattern',
+                        }
+                    });
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(`Erro: ${error.message}`);
+                });
+        }
+    })
+});
 
 document.getElementById('searchInput').addEventListener('input', function () {
     const searchTerm = document.getElementById('searchInput').value;
@@ -234,19 +235,6 @@ function render(data) {
                   <span
                     class="material-symbols-sharp info-icon"
                     style="color: blue; cursor: pointer;"
-                    data-id="${item.id_usuario}>"
-                    onmouseover="buscarCliente(this)"
-                    onmouseout="esconderTooltip(this)">
-                    info
-                  </span>
-                  <div class="tooltip" style="display: none;">
-                    Carregando...
-                  </div>
-                </td>
-                <td style="position: relative;">
-                  <span
-                    class="material-symbols-sharp info-icon"
-                    style="color: blue; cursor: pointer;"
                     data-id="${item.id}>"
                     onmouseover="buscarPedido(this)"
                     onmouseout="esconderTooltip(this)">
@@ -273,6 +261,7 @@ function render(data) {
                 </td>
                 <td>
                     <button id="editBtn" class="btn btn-dark" style="margin-right: 5px;" data-id="${item.id}">Editar</button>
+                    <button class="btn btn-danger" data-id="${item.id}">Excluir</button>
                 </td>
             `;
             itensContainer.appendChild(row);
@@ -320,41 +309,6 @@ function esconderTooltip(element) {
     tooltip.style.display = 'none';
 }
 
-function buscarCliente(element) {
-    const usuarioId = element.getAttribute('data-id');
-
-    mostrarTooltip(element, 'Carregando...');
-
-    fetch(`usuarios/${usuarioId}`, {
-        headers: {
-            'x-internal-request': 'true'
-        }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro ao buscar usuário');
-            }
-            return response.json();
-        })
-        .then(user => {
-            if (user) {
-                const content = `
-                    <div>
-                        <strong>Cliente:</strong> ${user.nome}<br>
-                        <strong>CPF:</strong> ${user.cpf}<br>
-                    </div>
-                    <hr>
-                `;
-                mostrarTooltip(element, content);
-            } else {
-                mostrarTooltip(element, 'Usuário não encontrado.');
-            }
-        })
-        .catch(() => {
-            mostrarTooltip(element, 'Erro ao carregar informações do cliente.');
-        });
-}
-
 function buscarPedido(element) {
     const pedidoId = element.getAttribute('data-id');
     const tooltip = element.nextElementSibling;
@@ -395,3 +349,39 @@ function buscarPedido(element) {
             mostrarTooltip(element, 'Erro ao carregar produtos.');
         });
 }
+
+function filtrarPedidosPorStatus() {
+    const status = document.getElementById("statusFilter").value.toLowerCase();
+    const rows = document.querySelectorAll("#itensContainer tr");
+    let found = false;
+
+    rows.forEach(row => {
+        const statusCell = row.querySelector("td:nth-child(6)");
+        if (statusCell) {
+            const cellValue = statusCell.textContent.toLowerCase();
+            if (status === "" || cellValue === status) {
+                row.style.display = "";
+                found = true;
+            } else {
+                row.style.display = "none";
+            }
+        }
+    });
+
+    const noResultsMessage = document.getElementById("noResultsMessage");
+    if (!found) {
+        if (!noResultsMessage) {
+            const noResultsRow = document.createElement("tr");
+            noResultsRow.id = "noResultsMessage";
+            noResultsRow.innerHTML = `
+                <td colspan="8" style="text-align: center;">Não há pedidos correspondentes</td>
+            `;
+            document.getElementById("itensContainer").appendChild(noResultsRow);
+        }
+    } else {
+        if (noResultsMessage) {
+            noResultsMessage.remove();
+        }
+    }
+}
+

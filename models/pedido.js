@@ -8,16 +8,6 @@ const Pedido = database.define('pedidos', {
         allowNull: false,
         primaryKey: true
     },
-    id_usuario: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'usuarios',
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-    },
     codigo:{
         type: Sequelize.STRING,
         allowNull: false
@@ -38,6 +28,11 @@ const Pedido = database.define('pedidos', {
     formaPagamento: {
         type: Sequelize.ENUM('debito', 'credito', 'dinheiro', 'pix'),
         allowNull: false
+    },
+    pago:{
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        default: false
     },
     createdAt: {
         type: Sequelize.DATE,

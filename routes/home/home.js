@@ -35,4 +35,9 @@ router.get('/produto', async (req, res) => {
 });
 
 
+router.get('/sobre', async (req, res) => {
+    res.render('home/sobre');
+});
+
+
 module.exports = router;

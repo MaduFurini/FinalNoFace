@@ -8,8 +8,11 @@ const {
     destroy,
     show
 } = require('../../controllers/usuarioController')
+const {
+    authMiddleware, verifyUserAbility
+} = require("../../middlewares/auth");
 
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, verifyUserAbility, async (req, res) => {
     const response = await index(req);
 
     if (response.error) {

@@ -1,5 +1,6 @@
 'use strict';
 
+const {INTEGER} = require("sequelize");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -9,16 +10,6 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
-      },
-      id_usuario: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'usuarios',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
       },
       codigo:{
         type: Sequelize.STRING,
@@ -40,6 +31,11 @@ module.exports = {
       formaPagamento:{
         type: Sequelize.ENUM ('debito', 'credito', 'dinheiro', 'pix'),
         allowNull: false
+      },
+      pago:{
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        default: false
       },
       createdAt: {
         type: Sequelize.DATE,

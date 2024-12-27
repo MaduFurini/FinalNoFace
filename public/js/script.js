@@ -3,6 +3,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const storedId = sessionStorage.getItem('lastId');
 
+    if (window.history && window.history.pushState) {
+        window.history.pushState('forward', null, './');
+        window.history.forward(1);
+    }
+
     if (storedId) {
         const currentUrl = window.location.href.split('#')[0];
 
@@ -17,7 +22,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     if (match) {
         const id = match[1];
-        console.log('ID encontrado na URL:', id);
 
         sessionStorage.setItem('lastId', id);
 
