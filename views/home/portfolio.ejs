@@ -4,48 +4,59 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.75">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="assets/style.css">
+        <link rel="stylesheet" href="/css/assets/style.css">
+        <link rel="stylesheet" href="/css/home/portfolio.css">
         <script src="/js/users/menu.js"></script>
         <title>NoFace | Portfolio</title>
     </head>
     <%- include('../partials/header.ejs') %>
     <div>
-        <div class="flex bg-black">
-            <div class="w-2/3">
-                <img src="/images/portfolio/img-1.jpg" alt="">
+        <div class="flex flex-col md:flex-row">
+            <div class="w-full">
+                <img src="/images/img-1.jpg" alt="" class="h-full w-full" />
             </div>
-            <div class="px-10 my-auto text-white">
-                <h1 class="text-6xl font-medium">𝙽𝚘𝙵𝚊𝚌𝚎</h1>
-                <p class="mt-2 text-2xl font-medium">𝚅𝚒𝚜𝚝𝚊 𝚊 𝚛𝚞𝚊</p>
+            <div class="relative flex w-full bg-black md:w-[60%] overflow-hidden justify-center md:justify-between items-center">
+                <div class="relative mx-auto py-5 text-center text-white lg:ml-14 md:text-start">
+                    <h1 class="text-4xl font-medium sm:text-6xl xl:text-7xl">𝙽𝚘𝙵𝚊𝚌𝚎</h1>
+                    <p class="text-lg font-medium sm:mt-2 sm:text-2xl xl:text-3xl">𝚅𝚒𝚜𝚝𝚊 𝚊 𝚛𝚞𝚊</p>
+                </div>
+                <img src="/images/light_noFaceLogo.png" alt="" class="absolute lg:relative opacity-10 place-self-center w-80 2xl:mr-28 lg:pl-0 lg:p-5 min-w-32">
             </div>
         </div>
-        <div class="flex">
-            <div>
-                <img src="/images/portfolio/IMG_2646.jpg" alt="">
-                <img src="/images/portfolio/IMG_0230.jpg" alt="">
-                <img src="/images/portfolio/1721235140188.jpg" alt="">
-                <img src="/images/portfolio/IMG_0384.jpg" alt="">
-                <img src="/images/portfolio/NL3A4480.jpg" alt="">
-                <img src="/images/portfolio/IMG_0241.jpg" alt="">
-                <img src="/images/portfolio/IMG_0213.jpg" alt="">
+        <div class="flex gap-2.5 bg-black/60 py-2">
+            <div class="flex flex-col gap-2">
+                <img src="/images/NL3A4347.jpg" alt="" />
+                <img src="/images/IMG_0230.jpg" alt="" />
+                <img src="/images/IMG_4407.jpg" alt="" />
+                <img src="/images/IMG_0322.jpg" alt="" />
+                <img src="/images/NL3A4480.jpg" alt="" />
+                <img src="/images/1721235140188.jpg" alt="" />
+                <img src="/images/IMG_0213.jpg" alt="" />
+                <img src="/images/IMG_2618.jpg" alt="" />
+                <img src="/images/img-1.jpg" alt="" />
             </div>
-            <div class="flex flex-col">
-                <img src="/images/portfolio/IMG_0370.jpg" alt="">
-                <img src="/images/portfolio/IMG_0365-2.jpg" alt="">
-                <img src="/images/portfolio/NL3A4347.jpg" alt="">
-                <img src="/images/portfolio/IMG_2515.jpg" alt="">
-                <img src="/images/portfolio/IMG_0243.jpg" alt="">
-                <img src="/images/portfolio/NL3A4462.jpg" alt="">
-                <img src="/images/portfolio/NL3A4418.jpg" alt="">
+            <div class="flex flex-col gap-2">
+                <img src="/images/IMG_0370.jpg" alt="" />
+                <img src="/images/IMG_0365-2.jpg" alt="" />
+                <img src="/images/NL3A4402.jpg" alt="" />
+                <img src="/images/IMG_0241.jpg" alt="" />
+                <img src="/images/IMG_0243.jpg" alt="" />
+                <img src="/images/NL3A4462.jpg" alt="" />
+                <img src="/images/IMG_2515.jpg" alt="" />
+                <img src="/images/NL3A4418.jpg" alt="" />
+                <img src="/images/IMG_2556.jpg" alt="" />
             </div>
-            <div>
-                <img src="/images/portfolio/img-2.jpg" alt="">
-                <img src="/images/portfolio/IMG_2587.jpg" alt="">
-                <img src="/images/portfolio/NL3A4402.jpg" alt="">
-                <img src="/images/portfolio/IMG_2512.jpg" alt="">
-                <img src="/images/portfolio/IMG_2557.jpg" alt="">
-                <img src="/images/portfolio/IMG_0223.jpg" alt="">
-                <img src="/images/portfolio/IMG_0263.jpg" alt="">
+            <div class="flex flex-col gap-2">
+                <img src="/images/img-2.jpg" alt="" />
+                <img src="/images/IMG_2587.jpg" alt="" />
+                <img src="/images/IMG_0384.jpg" alt="" />
+                <img src="/images/IMG_2512.jpg" alt="" />
+                <img src="/images/IMG_2557.jpg" alt="" />
+                <img src="/images/IMG_0223.jpg" alt="" />
+                <img src="/images/IMG_2646.jpg" alt="" />
+                <img src="/images/IMG_0263.jpg" alt="" />
+                <img src="/images/IMG_0365-2.jpg" alt="" />
+                <img src="/images/light_noFaceLogo.png" alt="" class="xs:px-10 self-center px-7 sm:px-14 md:px-16 lg:px-20 xl:px-32 2xl:px-36" />
             </div>
         </div>
     </div>
