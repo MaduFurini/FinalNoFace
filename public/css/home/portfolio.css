@@ -483,6 +483,10 @@ position: relative;
 margin-left: auto;
 margin-right: auto;
 }
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .block {
 display: block;
 }
@@ -665,8 +669,11 @@ header button:hover,
 #footer p:hover,
 #footer a:hover,
 header a:hover{
-    transform: scale(1.1);
-    transition: 0.5s;
+  transform: scale(1.1);
+  transition: 0.5s;
+}
+.max-h-svh {
+  max-height: 100svh;
 }
   @media (min-width: 640px) {
     .sm\:mt-2 {
@@ -698,6 +705,9 @@ header a:hover{
     }
     .md\:w-32 {
       width: 8rem;
+    }
+    .md\:w-\[40\%\] {
+      width: 40%;
     }
     .md\:w-\[60\%\] {
       width: 60%;
@@ -762,5 +772,11 @@ header a:hover{
       padding-left: 9rem;
       padding-right: 9rem;
     }
+    .xl\:hidden {
+      display: none;
+    }
+    .xl\:block {
+      display: block;
+    }    
   }
   
