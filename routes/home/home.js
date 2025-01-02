@@ -34,10 +34,12 @@ router.get('/produto', async (req, res) => {
     res.render('home/produto', { produto: response });
 });
 
-
 router.get('/sobre', async (req, res) => {
     res.render('home/sobre');
 });
 
+router.get('/portfolio', async (req, res) => {
+    res.render('home/portfolio');
+});
 
 module.exports = router;
