@@ -15,3 +15,20 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     })
 });
+
+document.querySelectorAll('#buttonBuy').forEach(item => {
+    item.addEventListener('click', function () {
+        const produtoId = this.dataset.id;
+
+        console.log(produtoId);
+        fetch(`/set`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ parameter: produtoId })
+        }).then(data => {
+            window.location.href = '/noFace/home/produto';
+        })
+    });
+});

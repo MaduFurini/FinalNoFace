@@ -50,7 +50,7 @@ const authMiddleware = async (req, res, next) => {
 
         next();
     } catch (err) {
-        return res.redirect(`/noFace/login?error=${err.message}`);
+        return res.redirect('/noFace/login?error=Sessão expirada, faça login novamente');
     }
 };
 

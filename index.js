@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
         maxAge: 60 * 60 * 1000,
         httpOnly: true,
@@ -39,15 +39,17 @@ app.post('/set', (req, res) => {
     const { parameter } = req.body;
 
     if (parameter != null) {
-        req.session.data = {
-            parameter: parameter
-        };
+        if (!req.session.data) {
+            req.session.data = {};
+        }
+        req.session.data.parameter = parameter;
     } else {
         req.session.data = null;
     }
 
     return res.json({ success: true });
 });
+
 
 app.use('/noFace/', noCache, routes);
 
