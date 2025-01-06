@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.75">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/css/assets/style.css">
+        <link rel="stylesheet" href="/css/home/politicas.css">
+        <script src="/js/home/menu.js"></script>
+        <link rel="shortcut icon" href="/images/dark_noFaceLogo.png">
+
+        <title>NoFace | Home</title>
+    </head>
+    <%- include('../partials/header.ejs') %>
+    <div class="mx-10 md:mx-auto pt-14 md:max-w-[45rem] xl:max-w-[70rem] text-justify">
+        <h1 class="text-3xl md:text-5xl font-semibold">Política de Troca e Devolução - StayNof</h1>
+    
+        <p class="mt-10 md:text-lg">A StayNof valoriza cada cliente e entende a importância de garantir sua satisfação. Trabalhamos com dedicação para oferecer produtos de qualidade que representem nossa essência. Abaixo estão os termos da nossa política de devolução e troca:</p>
+    
+        <ol class="pl-5">
+            <div>
+                <li class="font-semibold text-xl mt-16 list-decimal">Condições para Troca ou Devolução</li>
+                <p class="font-semibold mt-5">Aceitamos trocas ou devoluções nos seguintes casos:</p>
+                <ul class="mt-2 pl-5">
+                    <li class="list-disc">Produtos com defeito de fabricação.</li>
+                    <li class="list-disc">Produtos que apresentem divergência em relação ao pedido (tamanho, cor ou modelo).</li>
+                    <li class="list-disc">Solicitações realizadas dentro do prazo de 7 dias corridos após o recebimento do produto, conforme previsto no Código de Defesa do Consumidor.</li>
+                </ul>
+            </div>
+            <div>
+                <li class="font-semibold text-xl mt-10 list-decimal">Requisitos para Troca ou Devolução</li>
+                <ul class="mt-5 pl-5">
+                    <li class="list-disc">O produto deve estar sem uso, com todas as etiquetas e em sua embalagem original.</li>
+                    <li class="list-disc">É necessário apresentar a nota fiscal ou comprovante de compra.</li>
+                    <li class="list-disc">Produtos usados, danificados por mau uso ou fora do prazo não serão aceitos.</li>
+                </ul>
+            </div>
+            <div>
+                <li class="font-semibold text-xl mt-10 list-decimal">Como Solicitar</li>
+                <p class="mt-5">Entre em contato pelo e-mail <span class="font-semibold">staynofaround@gmail.com</span> com os seguintes topicos:</p>
+                <ul class="pl-5">
+                    <li class="list-disc mt-2">Nome completo</li>
+                    <li class="list-disc">Número do pedido</li>
+                    <li class="list-disc">Motivo da troca ou devolução</li>
+                    <li class="list-disc">Fotos do produto, se necessário (no caso de defeitos ou divergências).</li>
+                </ul>
+            </div>
+            <div>
+                <li class="font-semibold text-xl mt-10 list-decimal">Processo de Troca ou Devolução</li>
+                <h3 class="text-lg font-semibold mt-5">Troca por defeito ou erro da StayNof:</h3>
+                <ul class="pl-5">
+                    <li class="mt-2 list-disc">Os custos de envio e reenvio são cobertos liela StayNof.</li>
+                    <li class="list-disc">Após análise e aprovação, o cliente poderá escolher entre um novo produto (conforme disponibilidade em estoque) ou reembolso.</li>
+                </ul>
+                <h3 class="text-lg font-semibold mt-5">Troca por escolha do cliente (ex.: tamanho ou modelo):</h3>
+                <ul class="pl-5">
+                    <li class="mt-2 list-disc">O cliente arcará com os custos de envio e reenvio.</li>
+                    <li class="list-disc">O novo produto será enviado após o recebimento e análise do item devolvido.</li>
+                </ul>
+            </div>
+            <div>
+                <li class="font-semibold text-xl mt-10 list-decimal">Prazo para Resolução</li>
+                <p class="mt-5">A análise do produto será concluída em até 5 dias úteis após o recebimento.</p>
+                <p class="mt-2">O reembolso, quando aplicável, será realizado em até 10 dias úteis via Pix.</p>
+            </div>
+            <div>
+                <li class="font-semibold text-xl mt-10 list-decimal">Exceções</li>
+                <p class="mt-5">Não realizamos trocas ou devoluções de produtos em promoção, exceto em caso de defeito de fabricação.</p>
+            </div>
+        </ol>
+    
+        <p class="mt-10 md:mt-16">A StayNof agradece por fazer parte desse movimento. Para dúvidas ou suporte, estamos à disposição!</p>
+    </div>
+    <hr class="mt-10">
+    <%- include('../partials/footer.ejs') %>
+</html>

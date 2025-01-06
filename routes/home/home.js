@@ -42,4 +42,8 @@ router.get('/portfolio', async (req, res) => {
     res.render('home/portfolio');
 });
 
+router.get('/politicas', async (req, res) => {
+    res.render('home/politicas');
+});
+
 module.exports = router;
