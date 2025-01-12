@@ -40,7 +40,7 @@
                         </a>
                         <form action="/noFace/home/produto" method="get">
                             <p class="text-xl font-bold"><%= item.nome %></p>
-                            <button class="rounded-lg border border-black hover:bg-opacity-85 bg-black text-white shadow-md w-32 py-1 mt-2">Comprar</button>
+                            <button class="rounded-lg border border-black hover:bg-opacity-85 bg-black text-white shadow-md w-32 py-1 mt-2" id="buttonBuy" data-id="<%= item.id %>">Comprar</button>
                         </form>
                     </div>
                 <% }); %>

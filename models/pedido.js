@@ -27,7 +27,7 @@ const Pedido = database.define('pedidos', {
     },
     formaPagamento: {
         type: Sequelize.ENUM('debito', 'credito', 'dinheiro', 'pix'),
-        allowNull: false
+        allowNull: true
     },
     pago:{
         type: Sequelize.BOOLEAN,
