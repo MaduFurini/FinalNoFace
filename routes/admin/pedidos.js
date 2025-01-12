@@ -7,7 +7,8 @@ const {
     update,
     destroy,
     show,
-    indexProdutos
+    indexProdutos,
+    relatorioProdutos
 } = require('../../controllers/pedidoController')
 
 const {
@@ -89,5 +90,16 @@ router.get('/produtos/:id', blockDirectAccess, async (req, res) => {
         res.status(500).json({ message: response });
     }
 });
+
+router.post('/relatorio', blockDirectAccess, async (req, res) => {
+    const response = await relatorioProdutos(req);
+
+    if (response) {
+        return res.json(response);
+    } else {
+        res.status(500).json({ message: response });
+    }
+});
+
 
 module.exports = router;

@@ -108,19 +108,35 @@ document.addEventListener("DOMContentLoaded", () => {
             li.classList.add("cart-item", "p-2", "border-b", "border-gray-300", "flex", "items-center", "space-x-4");
 
             li.innerHTML = `
-                <img src="${item.img}" alt="${item.nome}" class="w-16 h-16 object-cover rounded" id="cart-img" />
-                <div class="flex-1">
-                    <p class="text-sm font-medium">${item.nome}</p>
-                    <p class="text-xs text-gray-500">Variação: ${item.variacao.nome}</p>
-                    <p class="text-sm text-gray-700">R$ ${item.preco.toFixed(2)}</p>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="btn-quantity" data-index="${index}" data-action="decrement">➖</button>
-                    <span class="text-sm font-medium">${item.quantidade}</span>
-                    <button class="btn-quantity" data-index="${index}" data-action="increment">➕</button>
-                </div>
-            `;
+            <img src="${item.img}" alt="${item.nome}" class="w-16 h-16 object-cover rounded" id="cart-img" />
+            <div class="flex-1">
+                <p class="text-sm font-medium">${item.nome}</p>
+                <p class="text-xs text-gray-500">Variação: ${item.variacao.nome}</p>
+                <p class="text-sm text-gray-700">R$ ${item.preco.toFixed(2)}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button class="btn-quantity" data-index="${index}" data-action="decrement">➖</button>
+                <span class="text-sm font-medium">${item.quantidade}</span>
+                <button class="btn-quantity" data-index="${index}" data-action="increment">➕</button>
+            </div>
+        `;
             cartItems.appendChild(li);
+        });
+
+        document.querySelectorAll('.btn-quantity').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const index = e.target.dataset.index;
+                const action = e.target.dataset.action;
+                if (action === 'increment') {
+                    carrinho[index].quantidade++;
+                } else if (action === 'decrement' && carrinho[index].quantidade > 1) {
+                    carrinho[index].quantidade--;
+                }
+
+                localStorage.setItem("carrinho", JSON.stringify(carrinho));
+
+                atualizarModal(carrinho);
+            });
         });
     }
 
@@ -171,7 +187,6 @@ document.addEventListener("DOMContentLoaded", () => {
     atualizarBotoes(carrinhoInicial);
 
 
-
     btnCheckout.addEventListener("click", () => {
         const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
@@ -198,6 +213,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const compraData = {
                     valorTotal: total,
+                    produtos: carrinho.map(item => ({
+                        produto: item.produto,
+                        variacao: item.variacao.data,
+                        categoria: item.categoria.data,
+                        quantidade: item.quantidade,
+                        preco: item.preco
+                    }))
                 };
 
                 try {
@@ -207,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             'Content-Type': 'application/json',
                             'x-internal-request': 'true'
                         },
-                        body: JSON.stringify(compraData),
+                        body: JSON.stringify({ carrinho: compraData }),
                     });
 
                     if (!response.ok) {
@@ -225,7 +247,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     let mensagem = `Olá, meu nome é ${userName}. Gostaria de confirmar a seguinte compra:\n\n`;
                     carrinho.forEach((item, index) => {
                         mensagem += `*${index + 1}. Produto:* ${item.nome}\n`;
-                        mensagem += `*Tamanho:* ${item.variacao.nome}\n`;
+                        mensagem += `*Variação:* ${item.variacao.nome}\n`;
+                        mensagem += `*Categoria:* ${item.categoria.nome}\n`;
                         mensagem += `*Quantidade:* ${item.quantidade || 1}\n`;
                         mensagem += `*Preço:* R$ ${item.preco.toFixed(2)}\n\n`;
                     });
@@ -260,4 +283,5 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
 });

@@ -89,8 +89,21 @@
                             <option value="Entregue">Entregue</option>
                             <option value="Cancelado">Cancelado</option>
                             <option value="Inativado">Inativado</option>
+                            <option value="Inativado">Devolvido</option>
+                            <option value="Inativado">Trocado</option>
                         </select>
                     </div>
+
+                    <div class="filter-container">
+                        <label for="startDate">Data Início:</label>
+                        <input type="date" id="startDate">
+
+                        <label for="endDate">Data Fim:</label>
+                        <input type="date" id="endDate">
+
+                        <button id="generateReportBtn" class="btn btn-dark">Gerar Relatório PDF</button>
+                    </div>
+
 				</div>
 			</div>
 
@@ -175,7 +188,9 @@
 	</section>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 	<script src="/js/admin/script.js"></script>
     <script src="/js/admin/pedidos.js"></script>
+    <script src="/js/admin/relatorio.js"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 const Pedido = require('../models/pedido');
 const PedidoProduto = require('../models/produtoPedido');
 const Produto = require('../models/produto');
+const Categoria = require('../models/categoria');
+const Variacao = require('../models/variacao');
 
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
@@ -50,7 +52,8 @@ const index = async (req) => {
 
 
 const store = async (req) => {
-    const { usuario, valorTotal, observacao, formaPagamento } = req.body;
+    console.log(req.body)
+    const { carrinho } = req.body;
 
     try {
         const prefix = "NFC";
@@ -59,6 +62,7 @@ const store = async (req) => {
         let codigoUnico = false;
         let codigoGerado = "";
 
+        // Gerar código único para o pedido
         while (!codigoUnico) {
             let randomSuffix = "";
 
@@ -76,22 +80,40 @@ const store = async (req) => {
             }
         }
 
-        await Pedido.create({
+        const pedido = await Pedido.create({
             codigo: codigoGerado,
             status: 'Realizado',
-            valorTotal: valorTotal,
-            observacao: observacao ?? null,
-            formaPagamento: formaPagamento,
+            valorTotal: carrinho.valorTotal,
             pago: 0,
             createdAt: new Date(),
             updatedAt: new Date()
         });
 
+        for (let item of carrinho.produtos) {
+            const produto = await Produto.findOne({
+                where: {
+                    id_referencia: item.produto,
+                    id_variacao: item.variacao
+                }
+            });
+
+            if (produto) {
+                await ProdutoPedido.create({
+                    id_produto: produto.id,
+                    id_pedido: pedido.id,
+                    quantidade: item.quantidade,
+                    status: 1,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
+            }
+        }
+
         return {
             codigo: codigoGerado
-        }
+        };
+
     } catch (e) {
-        console.log(e)
         return { error: "Erro ao listar pedidos" };
     }
 }
@@ -185,4 +207,81 @@ const indexProdutos = async (req) => {
     }
 }
 
-module.exports = { index, store, update, destroy, show, indexProdutos };
+const relatorioProdutos = async (req) => {
+    let { dataInicio, dataFim } = req.body;
+
+    try {
+        // Certifica-se de que dataInicio e dataFim são objetos Date
+        dataInicio = new Date(dataInicio);
+        dataFim = new Date(dataFim);
+
+        // Ajusta o horário para o intervalo completo do dia
+        dataInicio.setHours(0, 0, 0, 0);  // Definindo hora como 00:00:00
+        dataFim.setHours(23, 59, 59, 999);  // Definindo hora como 23:59:59.999
+
+        // Subtrai 3 horas para o fuso horário de Brasília (ou outro fuso desejado)
+        dataInicio.setHours(dataInicio.getHours() - 3);
+        dataFim.setHours(dataFim.getHours() - 3);
+
+        // Formata as datas no formato correto para SQL (YYYY-MM-DD HH:mm:ss)
+        const formatDateForDatabase = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        };
+
+        const formattedDataInicio = formatDateForDatabase(dataInicio);
+        const formattedDataFim = formatDateForDatabase(dataFim);
+
+        const pedidos = await Pedido.findAll({
+            where: {
+                createdAt: {
+                    [Op.between]: [formattedDataInicio, formattedDataFim]
+                }
+            }
+        });
+
+        const pedidosComProdutos = await Promise.all(
+            pedidos.map(async (pedido) => {
+                const produtosPedido = await PedidoProduto.findAll({
+                    where: { id_pedido: pedido.id }
+                });
+
+                const produtosDetalhados = await Promise.all(
+                    produtosPedido.map(async (produtoPedido) => {
+                        const produto = await Produto.findByPk(produtoPedido.id_produto);
+
+                        const categoria = produto ? await Categoria.findByPk(produto.id_categoria) : null;
+                        const variacao = produto ? await Variacao.findByPk(produto.id_variacao) : null;
+
+                        return {
+                            nome: produto ? produto.nome : 'Produto não encontrado',
+                            imagem: produto ? produto.imagem : null,
+                            variacao: variacao ? variacao.nome : 'Variação não encontrada',
+                            categoria: categoria ? categoria.nome : 'Categoria não encontrada',
+                            valor: pedido.valorTotal,
+                            quantidade: produtoPedido.quantidade,
+                            preco: produto.preco
+                        };
+                    })
+                );
+
+                return {
+                    pedido,
+                    produtos: produtosDetalhados
+                };
+            })
+        );
+
+        return pedidosComProdutos;
+    } catch (error) {
+        return { error: 'Erro ao buscar pedidos ou produtos.' };
+    }
+};
+
+
+module.exports = { index, store, update, destroy, show, indexProdutos, relatorioProdutos };

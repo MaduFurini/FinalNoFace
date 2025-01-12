@@ -13,7 +13,7 @@ const Pedido = database.define('pedidos', {
         allowNull: false
     },
     status:{
-        type: Sequelize.ENUM ('Realizado', 'Em andamento', 'Em entrega', 'Entregue', 'Cancelado', 'Inativado'),
+        type: Sequelize.ENUM ('Realizado', 'Em andamento', 'Em entrega', 'Entregue', 'Cancelado', 'Inativado', 'Devolvido', 'Trocado'),
         allowNull: false,
     },
     valorTotal:{
