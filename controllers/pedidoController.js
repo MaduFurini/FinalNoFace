@@ -77,18 +77,21 @@ const store = async (req) => {
         }
 
         await Pedido.create({
-            id_usuario: usuario,
             codigo: codigoGerado,
             status: 'Realizado',
             valorTotal: valorTotal,
-            observacao: observacao,
+            observacao: observacao ?? null,
             formaPagamento: formaPagamento,
+            pago: 0,
             createdAt: new Date(),
             updatedAt: new Date()
         });
 
-        return true;
+        return {
+            codigo: codigoGerado
+        }
     } catch (e) {
+        console.log(e)
         return { error: "Erro ao listar pedidos" };
     }
 }

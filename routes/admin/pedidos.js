@@ -44,7 +44,7 @@ router.post('/', blockDirectAccess, async (req, res) => {
     const response = await store(req);
 
     if (!response.error) {
-        res.status(200).json({ message: 'Pedido registrado com sucesso.' });
+        res.status(200).json(response);
     } else {
         res.status(500).json({ message: response.error });
     }
