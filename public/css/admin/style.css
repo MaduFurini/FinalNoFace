@@ -452,18 +452,23 @@ body {
 }
 #content main .table-data .order table th {
     padding-bottom: 12px;
+    padding-left: 10px;
     font-size: 13px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid var(--grey);
 }
 #content main .table-data .order table td {
-    padding: 16px 0;
+    padding: 16px 10px;
+    text-align: center;
 }
 #content main .table-data .order table td img {
     width: 36px;
     height: 36px;
     border-radius: 50%;
     object-fit: cover;
+}
+#content main .table-data .order table button {
+    margin-bottom: 10px;
 }
 #content main .table-data .order table tbody tr:hover {
     background: var(--grey);
@@ -621,6 +626,33 @@ tfoot td {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
+}
+
+.details-container {
+    padding: 10px;
+    background-color: #f4f4f4;
+}
+
+.details-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.details-container td, .details-container th {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.details-container table td div{
+    padding: 12px;
+}
+
+.toggle-details {
+    background-color: #7c7c7c;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
 }
 
 @media screen and (max-width: 768px) {

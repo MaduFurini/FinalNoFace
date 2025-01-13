@@ -8,6 +8,7 @@ module.exports = {
         nome: 'Administrador',
         cpf: 0,
         email: 'staynofaround@gmail.com',
+        telefone: 5519998852902,
         senha: '$2b$10$RG7604mC.oJSN7diC7I7Auv/MlaGsvCVAkVz9BHd2c/cTK4yPyNB.',
         tipo_usuario: 'admin',
         status: true,

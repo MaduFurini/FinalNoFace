@@ -1,7 +1,23 @@
 window.onload = function () {
     document.getElementById('searchInput').value = '';
-}
+};
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.toggle-details').forEach(toggle => {
+        toggle.addEventListener('click', function () {
+            const detailsRow = this.closest('tr').nextElementSibling;
+
+            if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+                detailsRow.style.display = 'table-row';
+                buscarPedido(toggle);
+            } else {
+                detailsRow.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Ação para editar pedido
 document.getElementById('itensContainer').addEventListener('click', async function (event) {
     const target = event.target;
 
@@ -10,30 +26,15 @@ document.getElementById('itensContainer').addEventListener('click', async functi
 
         try {
             const response = await fetch(`pedidos/${id}`, {
-                headers: {
-                    'x-internal-request': 'true'
-                }
+                headers: { 'x-internal-request': 'true' }
             });
             const item = await response.json();
 
             if (item) {
-                const statusOptions = [
-                    "Realizado",
-                    "Em andamento",
-                    "Entregue",
-                    "Cancelado",
-                    "Inativado",
-                ];
-
-                const pagOptions = [
-                    "debito",
-                    "credito",
-                    "dinheiro",
-                    "pix",
-                ];
-
+                const statusOptions = ["Realizado", "Em andamento", "Entregue", "Cancelado", "Inativado", "Devolvido", "Trocado"];
+                const pagOptions = ["debito", "credito", "dinheiro", "pix"];
                 const selectedStatus = item.status;
-                const selectedPag = item.formaPagamento;
+                const selectedPag = item.formaPagamento === null ? 'Indefinido' : item.formaPagamento;
 
                 const filteredOptions = statusOptions.filter(status => status !== selectedStatus);
                 const filteredOptionsPag = pagOptions.filter(pag => pag !== selectedPag);
@@ -41,47 +42,46 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                 Swal.fire({
                     title: 'Atualizar pedido',
                     html: `
-                    <form id="createForm">
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <select id="status" name="status" class="input">
-                                <option value="${selectedStatus}" disabled selected>${selectedStatus}</option>
-                                ${filteredOptions.map(status => `<option value="${status}">${status}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="formaPag">Forma de pagamento</label>
-                            <select id="formaPag" name="formaPag" class="input">
-                                <option value="${selectedPag}" disabled selected>${selectedPag}</option>
-                                ${filteredOptionsPag.map(pag => `<option value="${pag}">${pag}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="observacao">Observação</label>
-                            <input type="text" class="input" id="observacao" name="observacao" value="${item.observacao ?? ''}">
-                        </div>
-                    </form>
-                `,
-                    didOpen: () => {
-                        const cpfField = document.getElementById('cpf');
-                        if (cpfField) {
-                            cpfField.addEventListener('input', function () {
-                                mascaraCpf(cpfField);
-                            });
-                        }
-                    },
+                        <form id="createForm">
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select id="status" name="status" class="input">
+                                    <option value="${selectedStatus}" disabled selected>${selectedStatus}</option>
+                                    ${filteredOptions.map(status => `<option value="${status}">${status}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="formaPag">Forma de pagamento</label>
+                                <select id="formaPag" name="formaPag" class="input">
+                                    <option value="${selectedPag}" disabled selected>${selectedPag}</option>
+                                    ${filteredOptionsPag.map(pag => `<option value="${pag}">${pag}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="contato">Forma de contato</label>
+                                <input type="text" class="input" id="contato" name="contato" value="${item.contato ?? ''}">
+                            </div>
+                            <div class="form-group">
+                                <label for="observacao">Observação</label>
+                                <input type="text" class="input" id="observacao" name="observacao" value="${item.observacao ?? ''}">
+                            </div>
+                        </form>
+                    `,
                     showCancelButton: true,
                     confirmButtonText: 'Confirmar',
                     cancelButtonText: 'Cancelar',
                     customClass: {
-                        confirmButton: 'btn-dark-pattern',
-                        cancelButton: 'btn-light-pattern'
+                        confirmButton: ' btn-dark'
                     },
                     preConfirm: async () => {
                         const status = document.getElementById('status').value;
-                        const obs = document.getElementById('observacao').value;
+                        let obs = document.getElementById('observacao').value;
                         const formaPag = document.getElementById('formaPag').value;
+                        const contato = document.getElementById('contato').value;
 
+                        if (obs.trim() === '') {
+                            obs = null;
+                        }
                         try {
                             const updateResponse = await fetch(`pedidos/${id}`, {
                                 method: 'PUT',
@@ -89,29 +89,15 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                                     'Content-Type': 'application/json',
                                     'x-internal-request': 'true'
                                 },
-                                body: JSON.stringify({ status, obs, formaPag })
+                                body: JSON.stringify({ status, obs, formaPag, contato })
                             });
-
-                            const data = await updateResponse.json();
 
                             if (!updateResponse.ok) {
-                                throw new Error(data.message || 'Erro ao atualizar pedido.');
+                                throw new Error('Erro ao atualizar pedido.');
                             }
 
-                            await Swal.fire({
-                                title: 'Sucesso!',
-                                text: data.message || 'Pedido atualizado com sucesso.',
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                customClass: {
-                                    confirmButton: 'btn-dark-pattern',
-                                }
-                            });
-
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
-
+                            Swal.fire('Sucesso!', 'Pedido atualizado com sucesso.', 'success');
+                            setTimeout(() => location.reload(), 1500);
                         } catch (error) {
                             Swal.showValidationMessage(`Erro: ${error.message}`);
                         }
@@ -119,22 +105,13 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                 });
             }
         } catch (error) {
-            Swal.fire({
-                title: 'Erro',
-                text: `Erro ao buscar pedido: ${error.message}`,
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-dark-pattern',
-                }
-            });
+            Swal.fire('Erro', `Erro ao buscar pedido: ${error.message}`, 'error');
         }
     }
 });
 
-
 document.getElementById('deleteBtn').addEventListener('click', function () {
-    const id = document.getElementById('deleteBtn').dataset.id;
+    const id = this.dataset.id;
 
     Swal.fire({
         title: 'Tem certeza?',
@@ -144,82 +121,57 @@ document.getElementById('deleteBtn').addEventListener('click', function () {
         confirmButtonText: 'Sim, excluir!',
         cancelButtonText: 'Cancelar',
         customClass: {
-            confirmButton: 'btn-dark-pattern',
-            cancelButton: 'btn-light-pattern'
+            confirmButton: ' btn-dark'
         },
-
         preConfirm: () => {
             return fetch(`pedidos/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-internal-request': 'true'
-                },
+                headers: { 'Content-Type': 'application/json', 'x-internal-request': 'true' }
             })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao excluir pedido.');
-                    }
-
+                    if (!response.ok) throw new Error('Erro ao excluir pedido.');
                     return response.json();
                 })
                 .then(data => {
-                    Swal.fire({
-                        title: 'Sucesso!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        customClass: {
-                            confirmButton: 'btn-dark-pattern',
-                        }
-                    });
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1500);
+                    Swal.fire('Sucesso!', data.message, 'success');
+                    setTimeout(() => location.reload(), 1500);
                 })
-                .catch(error => {
-                    Swal.showValidationMessage(`Erro: ${error.message}`);
-                });
+                .catch(error => Swal.showValidationMessage(`Erro: ${error.message}`));
         }
-    })
+    });
 });
 
 document.getElementById('searchInput').addEventListener('input', function () {
-    const searchTerm = document.getElementById('searchInput').value;
+    const searchTerm = this.value;
 
     fetch(`pedidos?codigo=${encodeURIComponent(searchTerm)}`, {
-        headers: {
-            'x-internal-request': 'true'
-        }
+        headers: { 'x-internal-request': 'true' }
     })
         .then(response => response.json())
         .then(data => {
             render(data);
             updatePagination(data.currentPage, data.totalPages);
-        })
+        });
 });
 
 document.getElementById('clean').addEventListener('click', function () {
     document.getElementById('searchInput').value = '';
-
     const url = new URL(window.location);
     url.searchParams.delete('nome');
     window.history.replaceState({}, '', url);
     fetchItens();
 });
 
-function fetchItens(searchTerm = '') {
-    fetch(`pedidos?codigo=${encodeURIComponent(searchTerm)}`, {
-        headers: {
-            'x-internal-request': 'true'
-        }
-    })
+function fetchItens() {
+    fetch('pedidos')
         .then(response => response.json())
         .then(data => {
             render(data);
             updatePagination(data.currentPage, data.totalPages);
         })
+        .catch(error => {
+            console.error('Erro ao carregar itens:', error);
+        });
 }
 
 function render(data) {
@@ -231,87 +183,71 @@ function render(data) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.codigo}</td>
-                <td style="position: relative;">
-                  <span
-                    class="material-symbols-sharp info-icon"
-                    style="color: blue; cursor: pointer;"
-                    data-id="${item.id}>"
-                    onmouseover="buscarPedido(this)"
-                    onmouseout="esconderTooltip(this)">
-                    info
-                  </span>
-                  <div class="tooltip" style="display: none;">
-                    Carregando...
-                  </div>
-                </td>
                 <td>R$${item.valorTotal}</td>
-                <td>${item.formaPagamento}</td>
-                <td>${item.observacao}</td>
+                <td>${item.formaPagamento ? item.formaPagamento : 'Indefinido' }</td>
+                <td>${item.observacao ? item.observacao : '' }</td>
                 <td>${item.status}</td>
-                <td>
-                  ${new Intl.DateTimeFormat('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false,
-                        timeZone: 'America/Sao_Paulo'
-                    }).format(new Date(item.createdAt))}
-                </td>
+                <td>${item.contato}</td>
+                <td>${new Date(item.createdAt).toLocaleString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                })}</td>
+                <td>${new Date(item.updatedAt).toLocaleString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                })}</td>
                 <td>
                     <button id="editBtn" class="btn btn-dark" style="margin-right: 5px;" data-id="${item.id}">Editar</button>
-                    <button class="btn btn-danger" data-id="${item.id}">Excluir</button>
+                    <button id="deleteBtn" class="btn btn-danger" data-id="${item.id}">Excluir</button>
+                    <button class="toggle-details" data-id="${item.id}">Abrir Detalhes</button>
                 </td>
             `;
             itensContainer.appendChild(row);
         });
     } else {
-        itensContainer.innerHTML = `
-            <tr>
-                <td colspan="8" style="text-align: center;">Não há funcionários cadastrados</td>
-            </tr>
-        `;
+        itensContainer.innerHTML = '<tr><td colspan="8">Nenhum pedido encontrado</td></tr>';
     }
 }
 
+// Atualizar paginação
 function updatePagination(currentPage, totalPages) {
     const paginationContainer = document.querySelector('.pagination');
     paginationContainer.innerHTML = '';
 
     for (let i = 1; i <= totalPages; i++) {
         const pageItem = document.createElement('li');
-        pageItem.classList.add('page-item');
-        if (i === currentPage) {
-            pageItem.classList.add('active');
-        }
-
-        pageItem.innerHTML = `<a class="page-link" href="pedidos?page=${i}">${i}</a>`;
+        pageItem.innerHTML = `<a href="pedidos?page=${i}">${i}</a>`;
         paginationContainer.appendChild(pageItem);
     }
 }
 
-fetchItens();
-
 function mostrarTooltip(element, content) {
     const tooltip = element.nextElementSibling;
+    if (tooltip) {
+        tooltip.innerHTML = content;
+        tooltip.style.display = 'block';
 
-    tooltip.innerHTML = content;
-    tooltip.style.display = 'block';
-
-    const rect = element.getBoundingClientRect();
-    tooltip.style.top = `${rect.bottom + window.scrollY}px`;
-    tooltip.style.left = `${rect.left + window.scrollX}px`;
+        const rect = element.getBoundingClientRect();
+        tooltip.style.top = `${rect.bottom + window.scrollY}px`;
+        tooltip.style.left = `${rect.left + window.scrollX}px`;
+    }
 }
 
 function esconderTooltip(element) {
     const tooltip = element.nextElementSibling;
-    tooltip.style.display = 'none';
+    if (tooltip) {
+        tooltip.style.display = 'none';
+    }
 }
 
 function buscarPedido(element) {
     const pedidoId = element.getAttribute('data-id');
-    const tooltip = element.nextElementSibling;
 
     mostrarTooltip(element, 'Carregando...');
 
@@ -333,22 +269,29 @@ function buscarPedido(element) {
                 return;
             }
 
-            let content = '';
+            let produtosContent = '';
             produtos.forEach(p => {
-                content += `
+                console.log(p);
+                produtosContent += `
                     <div>
                         <strong>Nome do Produto:</strong> ${p.nome}<br>
-                        <strong>Quantidade:</strong> ${p.quantidade}
+                        <strong>Quantidade:</strong> ${p.quantidade}<br>
+                        <strong>Preço:</strong> R$${p.preco}<br>
+                        <strong>Variação:</strong> ${p.variacao}<br>
                     </div>
                     <hr>
                 `;
             });
-            mostrarTooltip(element, content);
+
+            document.getElementById('pedido-produtos').innerHTML = produtosContent;
+
+            mostrarTooltip(element, 'Detalhes carregados.');
         })
         .catch(() => {
             mostrarTooltip(element, 'Erro ao carregar produtos.');
         });
 }
+
 
 function filtrarPedidosPorStatus() {
     const status = document.getElementById("statusFilter").value.toLowerCase();
@@ -384,4 +327,3 @@ function filtrarPedidosPorStatus() {
         }
     }
 }
-

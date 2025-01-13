@@ -106,44 +106,32 @@
 
 				</div>
 			</div>
-
 			<div class="table-data">
 				<div class="order">
-					<table>
-						<thead>
-							<tr>
+					<table id="pedido-table">
+                        <thead>
+                            <tr>
                                 <th>Código</th>
-                                <th>Informações</th>
-                                <th>Valor total</th>
-                                <th>Forma pagamento</th>
+                                <th>Valor Total</th>
+                                <th>Forma de Pagamento</th>
                                 <th>Observação</th>
-								<th>Status</th>
-                                <th>Data/Hora</th>
+                                <th>Status</th>
+                                <th>Contato</th>
+                                <th>Data Criação</th>
+                                <th>Atualização</th>
                                 <th>Ações</th>
-							</tr>
-						</thead>
-						<tbody id="itensContainer">
+                            </tr>
+                        </thead>
+                        <tbody id="itensContainer">
                             <% if (itens && itens.length > 0) { %>
                                 <% itens.forEach(item => { %>
                                     <tr>
                                         <td><%= item.codigo %></td>
-                                        <td style="position: relative;">
-                                          <span
-                                            class="material-symbols-sharp info-icon"
-                                            style="color: blue; cursor: pointer;"
-                                            data-id="<%= item.id %>"
-                                            onmouseover="buscarPedido(this)"
-                                            onmouseout="esconderTooltip(this)">
-                                            info
-                                          </span>
-                                          <div class="tooltip" style="display: none;">
-                                            Carregando...
-                                          </div>
-                                        </td>
                                         <td>R$<%= item.valorTotal%></td>
-                                        <td><%= item.formaPagamento%></td>
+                                        <td><%= item.formaPagamento ? item.formaPagamento : 'Indefinido' %></td>
                                         <td><%= item.observacao%></td>
                                         <td><%= item.status%></td>
+                                        <td><%= item.contato %></td>
                                         <td>
                                           <%= new Intl.DateTimeFormat('pt-BR', {
                                                 day: '2-digit',
@@ -156,32 +144,45 @@
                                             }).format(new Date(item.createdAt)) %>
                                         </td>
                                         <td>
+                                          <%= new Intl.DateTimeFormat('pt-BR', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                hour12: false,
+                                                timeZone: 'America/Sao_Paulo'
+                                            }).format(new Date(item.updatedAt)) %>
+                                        </td>
+                                        <td>
                                             <button id="editBtn" class="btn btn-dark" style="margin-right: 5px;" data-id="<%= item.id %>">Editar</button>
-                                            <button id="deleteBtn" class="btn btn-danger" data-id="<%= item.id %>">Excluir</button>
+                                            <% if (item.exibirRelatorio == 1) { %>
+                                                <button id="deleteBtn" class="btn btn-danger" data-id="<%= item.id %>">Excluir</button>
+                                            <% } %>
+                                            <button class="toggle-details" data-id="<%= item.id %>">Abrir Detalhes</button>
                                         </td>
                                     </tr>
-                                <% }); %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="9" style="text-align: center;">Não há pedidos cadastrados</td>
-                                </tr>
-                            <% } %>
-						</tbody>
+                                    <tr class="details-row" style="display: none;">
+                                        <td colspan="9">
+                                            <div class="details-container">
+                                                <table id="product-details">
+                                                    <tr>
+                                                        <th>Produtos</th>
+                                                        <td id="pedido-produtos"></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="9" style="text-align: center;">Não há pedidos cadastrados</td>
+                                    </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
 
-						<tfoot>
-                            <tr>
-                                <td colspan="9">
-                                    <ul class="pagination">
-                                        <% for(let i = 1; i <= totalPages; i++) { %>
-                                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                                <a class="page-link" href="pedidos?page=<%= i %>"><%= i %></a>
-                                            </li>
-                                        <% } %>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tfoot>
-					</table>
 				</div>
 			</div>
 		</main>

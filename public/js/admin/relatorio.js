@@ -108,13 +108,23 @@ document.getElementById('generateReportBtn').addEventListener('click', function 
                 doc.text(pedido.formaPagamento === null ? ' ' : pedido.formaPagamento, 180, yOffset);
                 doc.text(formattedDate, 230, yOffset);
                 doc.text(pedido.pago === 1 ? 'Sim' : 'Não', 270, yOffset);
-
+                doc.text(pedido.contato, 280, yOffset);
                 yOffset += 10;
 
                 if (yOffset > 260) {
                     doc.addPage();
                     yOffset = 20;
                 }
+
+                fetch(`/noFace/admin/pedidos/${pedido.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-internal-request': 'true'
+                    },
+                    body: JSON.stringify({ exibir: true }),
+                })
+
 
                 const categorias = [...new Set(produtos.map(produto => produto.categoria))];
                 categorias.forEach(categoria => {

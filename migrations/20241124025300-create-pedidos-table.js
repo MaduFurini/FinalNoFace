@@ -37,6 +37,15 @@ module.exports = {
         allowNull: false,
         default: false
       },
+      exibirRelatorio:{
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        default: false
+      },
+      contato:{
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

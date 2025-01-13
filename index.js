@@ -50,6 +50,9 @@ app.post('/set', (req, res) => {
     return res.json({ success: true });
 });
 
+app.get('/config', (req, res) => {
+    res.json({ telefoneDefault: process.env.TELEFONE_DEFAULT });
+});
 
 app.use('/noFace/', noCache, routes);
 

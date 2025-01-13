@@ -135,11 +135,34 @@ body {
     background-color: #ddd;
 }
 
-#cart-img {
-    width: 50px;
+p:hover {
+    transform: scale(1.0) !important;
+}
+
+.cart-item {
+    position: relative;
+    padding-top: 1rem;
+}
+
+.cart-item img {
+    width: 90px;
+    height: 80px;
     border-radius: 180px;
 }
 
-p:hover {
-    transform: scale(1.0) !important;
+.remove-item {
+    position: absolute;
+    top: -3px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: #f56565;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.remove-item:hover {
+    color: #c53030;
 }

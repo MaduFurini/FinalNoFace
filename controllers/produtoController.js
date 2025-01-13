@@ -405,28 +405,30 @@ const destroy = async (req) => {
             return { error: 'Variação não encontrada' };
         }
 
-        const relacao = await ProdutoPedido.findOne({
-            where: {
-                id_produto: id
-            }
-        });
-
         const produtosFilhos = await Produto.findAll({
             where: {
                 id_referencia: id
             }
         });
 
-        if (relacao) {
+        const relacoes = await Promise.all(produtosFilhos.map(async (produto) => {
+            return await ProdutoPedido.findOne({
+                where: {
+                    id_produto: produto.id
+                }
+            });
+        }));
+
+        const hasRelation = relacoes.some(relacao => relacao !== null);
+
+        if (hasRelation) {
             item.status = 0;
             item.updatedAt = new Date();
-
             await item.save();
 
             for (const produtoFilho of produtosFilhos) {
                 produtoFilho.status = 0;
                 produtoFilho.updatedAt = new Date();
-
                 await produtoFilho.save();
             }
 

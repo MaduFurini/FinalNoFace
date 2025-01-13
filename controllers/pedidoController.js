@@ -52,7 +52,6 @@ const index = async (req) => {
 
 
 const store = async (req) => {
-    console.log(req.body)
     const { carrinho } = req.body;
 
     try {
@@ -85,6 +84,8 @@ const store = async (req) => {
             status: 'Realizado',
             valorTotal: carrinho.valorTotal,
             pago: 0,
+            exibirRelatorio: 0,
+            contato: carrinho.contato,
             createdAt: new Date(),
             updatedAt: new Date()
         });
@@ -119,7 +120,7 @@ const store = async (req) => {
 }
 
 const update = async (req) => {
-    const { status, obs, formaPag } = req.body;
+    const { status, obs, formaPag, contato, exibir } = req.body;
     const { id } = req.params;
 
     try {
@@ -130,16 +131,18 @@ const update = async (req) => {
         }
 
         item.status = status || item.status;
-        item.observacao = obs || item.observacao;
-        item.formaPagamento = formaPag || item.formaPagamento;
+        item.observacao = (obs !== '') ? obs : item.observacao;
+        item.formaPagamento = (formaPag !== 'Indefinido') ? formaPag : item.formaPagamento;
+        item.contato = (contato && contato !== item.contato) ? contato : item.contato;
+        item.exibirRelatorio = exibir === true ? 1 : 0;
 
         item.updatedAt = new Date();
 
         await item.save();
 
-        return true;
+      return true;
     } catch (e) {
-        return { error: "Erro ao atualizar funcionário" };
+        return { error: "Erro ao atualizar pedido" };
     }
 }
 
@@ -191,13 +194,15 @@ const indexProdutos = async (req) => {
 
         return await Promise.all(
             pedidos.map(async (pedido) => {
-                const produto = await Produto.findByPk(pedido.id_produto, {
-                    attributes: ['nome']
-                });
+                const produto = await Produto.findByPk(pedido.id_produto);
+
+                const variacao = await Variacao.findByPk(produto.id_variacao);
 
                 return {
                     id_produto: pedido.id_produto,
                     nome: produto ? produto.nome : 'Produto não encontrado',
+                    preco: produto.preco,
+                    variacao: variacao.nome,
                     quantidade: pedido.quantidade,
                 };
             })

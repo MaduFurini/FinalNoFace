@@ -90,6 +90,7 @@
 							<tr>
 								<th>Nome</th>
 								<th>Email</th>
+                                <th>Telefone</th>
 								<th>Status</th>
                                 <th>Ações</th>
 							</tr>
@@ -102,6 +103,9 @@
                                         <td>
                                             <%= item.email %>
                                         </td>
+                                        <td id="telefone">
+                                            <%= item.telefone %>
+                                        </td>
                                         <td>
                                             <label class="switch">
                                                 <input type="checkbox"
@@ -113,6 +117,9 @@
                                         </td>
                                         <td>
                                             <button id="editBtn" class="btn btn-dark" style="margin-right: 5px;" data-id="<%= item.id %>">Editar</button>
+                                            <% if (item.email !== 'staynofaround@gmail.com') { %>
+                                                <button id="deleteBtn" class="btn btn-danger" data-id="<%= item.id %>">Excluir</button>
+                                            <% } %>
                                         </td>
                                     </tr>
                                 <% }); %>

@@ -2,6 +2,15 @@ window.onload = function () {
     document.getElementById('searchInput').value = '';
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const telefones = document.querySelectorAll("#telefone");
+
+    telefones.forEach(function(telefone) {
+        let telefoneFormatado = mascaraTel(telefone.textContent);
+        telefone.textContent = telefoneFormatado;
+    });
+});
+
 document.querySelectorAll('.status-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', function() {
         const itemId = this.dataset.id;
@@ -52,6 +61,10 @@ document.getElementById('newItem').addEventListener('click', function () {
                     <input type="text" class="input" id="cpf" name="cpf" required>
                 </div>
                 <div class="form-group">
+                    <label for="tel">Telefone*</label>
+                    <input type="text" class="input" id="tel" name="tel" required>
+                </div>
+                <div class="form-group">
                     <label for="email">Email*</label>
                     <input type="text" class="input" id="email" name="email" required>
                 </div>
@@ -68,6 +81,14 @@ document.getElementById('newItem').addEventListener('click', function () {
                     mascaraCpf(cpfField);
                 });
             }
+
+            const telField = document.getElementById('tel');
+
+            if (telField) {
+                telField.addEventListener('input', function () {
+                    mascaraTelefone(telField);
+                });
+            }
         },
         showCancelButton: true,
         confirmButtonText: 'Confirmar',
@@ -81,8 +102,9 @@ document.getElementById('newItem').addEventListener('click', function () {
             const email = document.getElementById('email').value;
             const cpf = document.getElementById('cpf').value;
             const senha = document.getElementById('senha').value;
+            const telefone = document.getElementById('tel').value;
 
-            if (!nome || !email || !cpf || !senha) {
+            if (!nome || !email || !cpf || !senha || !telefone) {
                 Swal.showValidationMessage('Por favor, preencha todos os campos obrigatórios.');
                 return false;
             }
@@ -105,7 +127,7 @@ document.getElementById('newItem').addEventListener('click', function () {
                         'Content-Type': 'application/json',
                         'x-internal-request': 'true'
                     },
-                    body: JSON.stringify({ nome, email, cpf, senha })
+                    body: JSON.stringify({ nome, email, cpf, senha, telefone })
                 });
 
                 const data = await response.json();
@@ -163,6 +185,10 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                             <input type="text" class="input" id="cpf" name="cpf" value="${item.cpf}">
                         </div>
                         <div class="form-group">
+                            <label for="tel">Telefone*</label>
+                            <input type="text" class="input" id="tel" name="tel" value="${mascaraTel(item.telefone)}">
+                        </div>
+                        <div class="form-group">
                             <label for="email">Email</label>
                             <input type="text" class="input" id="email" name="email" value="${item.email}">
                         </div>
@@ -179,6 +205,14 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                                 mascaraCpf(cpfField);
                             });
                         }
+
+                        const telField = document.getElementById('tel');
+
+                        if (telField) {
+                            telField.addEventListener('input', function () {
+                                mascaraTelefone(telField);
+                            });
+                        }
                     },
                     showCancelButton: true,
                     confirmButtonText: 'Confirmar',
@@ -192,8 +226,9 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                         const email = document.getElementById('email').value;
                         const cpf = document.getElementById('cpf').value;
                         const senha = document.getElementById('senha').value;
+                        const telefone = document.getElementById('tel').value;
 
-                        if (cpf.length < 11) {
+                        if (cpf && cpf.length < 11) {
                             Swal.showValidationMessage('Por favor, insira todos os dígitos de seu CPF.');
                             return false;
                         }
@@ -205,6 +240,43 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                             return false;
                         }
 
+                        if (telefone !== item.telefone) {
+                            if (item.email === 'staynofaround@gmail.com') {
+                                const result = await Swal.fire({
+                                    title: 'Atenção!',
+                                    text: 'O telefone indicado será utilizado para envio dos pedidos através do WhatsApp. Prosseguir?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'OK',
+                                    cancelButtonText: 'Cancelar',
+                                    customClass: {
+                                        confirmButton: 'btn-dark-pattern',
+                                    }
+                                });
+
+                                if (result.isDismissed) {
+                                    return;
+                                }
+                            }
+                        }
+
+                        if (email !== item.email) {
+                            if (item.email === 'staynofaround@gmail.com') {
+                                const result = await Swal.fire({
+                                    title: 'Atenção!',
+                                    text: 'Operação inválida ',
+                                    icon: 'warning',
+                                    showConfirmButton: false,
+                                    showCancelButton: true,
+                                    cancelButtonText: 'Cancelar',
+                                });
+
+                                if (result.isDismissed) {
+                                    return;
+                                }
+                            }
+                        }
+
                         try {
                             const updateResponse = await fetch(`funcionarios/${id}`, {
                                 method: 'PUT',
@@ -212,7 +284,7 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                                     'Content-Type': 'application/json',
                                     'x-internal-request': 'true'
                                 },
-                                body: JSON.stringify({nome, email, cpf, senha})
+                                body: JSON.stringify({nome, email, cpf, senha, telefone})
                             });
 
                             const data = await updateResponse.json();
@@ -256,56 +328,57 @@ document.getElementById('itensContainer').addEventListener('click', async functi
 });
 
 
-// document.getElementById('deleteBtn').addEventListener('click', function () {
-//     const id = document.getElementById('deleteBtn').dataset.id;
-//
-//     Swal.fire({
-//         title: 'Tem certeza?',
-//         text: "Essa ação não pode ser desfeita!",
-//         icon: 'warning',
-//         showCancelButton: true,
-//         confirmButtonText: 'Sim, excluir!',
-//         cancelButtonText: 'Cancelar',
-//         customClass: {
-//             confirmButton: 'btn-dark-pattern',
-//             cancelButton: 'btn-light-pattern'
-//         },
-//
-//         preConfirm: () => {
-//             return fetch(`funcionarios/${id}`, {
-//                 method: 'DELETE',
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 },
-//             })
-//                 .then(response => {
-//                     if (!response.ok) {
-//                         throw new Error('Erro ao excluir funcionário.');
-//                     }
-//
-//                     return response.json();
-//                 })
-//                 .then(data => {
-//                     Swal.fire({
-//                         title: 'Sucesso!',
-//                         text: data.message,
-//                         icon: 'success',
-//                         confirmButtonText: 'OK',
-//                         customClass: {
-//                             confirmButton: 'btn-dark-pattern',
-//                         }
-//                     });
-//
-//                     setTimeout(() => {
-//                         location.reload();
-//                     }, 1500);
-//                 })
-//                 .catch(error => {
-//                     Swal.showValidationMessage(`Erro: ${error.message}`);
-//                 });
-//         }
-//     })
-// });
+document.getElementById('deleteBtn').addEventListener('click', function () {
+    const id = document.getElementById('deleteBtn').dataset.id;
+
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Essa ação não pode ser desfeita!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn-dark-pattern',
+            cancelButton: 'btn-light-pattern'
+        },
+
+        preConfirm: () => {
+            return fetch(`funcionarios/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-internal-request': 'true'
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao excluir funcionário.');
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    Swal.fire({
+                        title: 'Sucesso!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-dark-pattern',
+                        }
+                    });
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(`Erro: ${error.message}`);
+                });
+        }
+    })
+});
 
 document.getElementById('searchInput').addEventListener('input', function () {
     const searchTerm = document.getElementById('searchInput').value;
@@ -354,6 +427,7 @@ function render(data) {
             row.innerHTML = `
                 <td>${item.nome}</td>
                 <td>${item.email}</td>
+                <td id="telefone">${item.telefone}</td>
                 <td>
                     <label class="switch">
                         <input type="checkbox" class="status-checkbox" data-id="${item.id}" ${item.status ? 'checked' : ''}>
@@ -451,4 +525,31 @@ function validarCPF(cpf) {
     }
 
     return true;
+}
+
+function mascaraTelefone(campo) {
+    let value = campo.value.replace(/\D/g, '');
+    if (value.length <= 10) {
+        value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else {
+        value = value.replace(/(\d{2})(\d{5})(\d{4})(\d{1})/, '($1) $2-$3$4');
+    }
+
+    if (value.length > 15) {
+        value = value.substring(0, 15);
+    }
+
+    campo.value = value;
+}
+
+function mascaraTel(telefone) {
+    telefone = telefone.replace(/\D/g, "");
+
+    if (telefone.length <= 10) {
+        telefone = telefone.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+    } else {
+        telefone = telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    }
+
+    return telefone;
 }

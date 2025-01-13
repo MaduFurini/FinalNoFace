@@ -20,7 +20,6 @@ document.querySelectorAll('#buttonBuy').forEach(item => {
     item.addEventListener('click', function () {
         const produtoId = this.dataset.id;
 
-        console.log(produtoId);
         fetch(`/set`, {
             method: 'POST',
             headers: {

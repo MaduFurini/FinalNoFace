@@ -20,6 +20,10 @@ const Usuario = database.define('usuarios', {
         type: Sequelize.STRING,
         allowNull: false,
     },
+    telefone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
     senha: {
         type: Sequelize.STRING,
         allowNull: false

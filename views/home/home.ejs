@@ -34,13 +34,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-<%= Math.min(itens.length, 3) %> lg:grid-cols-<%= Math.min(itens.length, 3) %> gap-24 mt-10 justify-items-center w-full">
                 <% itens.forEach(item => { %>
                     <div class="flex flex-col justify-between items-center gap-3 w-52 h-full">
-                        <a href="produto/<%= item.id %>" class="w-full h-64 flex justify-center items-center overflow-hidden rounded-xl hover:opacity-85">
+                        <a class="w-full h-64 flex justify-center items-center overflow-hidden rounded-xl hover:opacity-85">
                             <img src="<%= item.img ? item.img : '/images/default.png' %>" alt="" class="w-full h-full object-cover rounded-xl" />
                         </a>
-                        <form action="/noFace/home/produto" method="get">
-                            <p class="text-xl font-bold"><%= item.nome %></p>
-                            <button class="rounded-lg border border-black hover:bg-opacity-85 bg-black text-white shadow-md w-32 py-1 mt-2" id="buttonBuy" data-id="<%= item.id %>">Comprar</button>
-                        </form>
+
+                        <p class="text-xl font-bold"><%= item.nome %></p>
+                        <button class="rounded-lg border border-black hover:bg-opacity-85 bg-black text-white shadow-md w-32 py-1 mt-2" id="buttonBuy" data-id="<%= item.id %>">Comprar</button>
                     </div>
                 <% }); %>
             </div>
@@ -65,6 +64,7 @@
         </div>
     </div>
 
+    <script src="/js/home/menu.js"></script>
     <script>
         let userData = <%- JSON.stringify(user) %>;
         userData = userData.user;

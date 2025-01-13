@@ -2,6 +2,7 @@ const Usuario = require('../models/usuario');
 
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 
 const index = async (req) => {
     const page = parseInt(req.query.page) || 1;
@@ -45,7 +46,7 @@ const index = async (req) => {
 
 
 const store = async (req) => {
-    const { nome, email, cpf, senha } = req.body;
+    const { nome, email, cpf, senha, telefone } = req.body;
 
     try {
         const usuario = await Usuario.findOne({
@@ -78,6 +79,7 @@ const store = async (req) => {
             cpf: cpf,
             tipo_usuario: 'admin',
             status: 1,
+            telefone: telefone,
             createdAt: new Date(),
             updatedAt: new Date()
         });
@@ -90,6 +92,7 @@ const store = async (req) => {
 
 const update = async (req) => {
     const { nome, email, cpf, senha, status } = req.body;
+    let { telefone } = req.body;
     const { id } = req.params;
 
     try {
@@ -121,18 +124,36 @@ const update = async (req) => {
             }
         }
 
+        if (telefone !== item.telefone) {
+            if (item.email === 'staynofaround@gmail.com') {
+                telefone = telefone.replace(/\D/g, '');
+
+                if (!telefone.startsWith('55')) {
+                    process.env.TELEFONE_DEFAULT = '55' + telefone;
+                } else {
+                    process.env.TELEFONE_DEFAULT = telefone;
+                }
+            }
+        } else {
+            process.env.TELEFONE_DEFAULT = '5519998852902';
+        }
+
         item.nome = nome || item.nome;
         item.email = email || item.email;
         item.cpf = cpf || item.cpf;
         item.status = status === false ? 0 : 1 || item.status;
+        item.telefone= telefone || item.telefone;
 
         if (senha && senha.trim() !== '') {
             item.senha =  await bcrypt.hash(senha, 10);
         }
 
+        console.log('Telefone Default:', process.env.TELEFONE_DEFAULT);
         item.updatedAt = new Date();
 
         await item.save();
+
+        fs.appendFileSync('.env', `TELEFONE_DEFAULT=${process.env.TELEFONE_DEFAULT}\n`);
 
         return true;
     } catch (e) {
@@ -150,12 +171,9 @@ const destroy = async (req) => {
             return { error: 'Funcionário não encontrado' };
         }
 
-        item.status = 0;
-        item.updatedAt = new Date();
+        await item.destroy();
 
-        await item.save();
-
-        return { message: 'Funcionário inativado com sucesso' };
+        return { message: 'Funcionário excluído com sucesso' };
     } catch (e) {
         return { error: 'Erro ao inativar usuário' };
     }
