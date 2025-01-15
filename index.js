@@ -54,6 +54,10 @@ app.get('/config', (req, res) => {
     res.json({ telefoneDefault: process.env.TELEFONE_DEFAULT });
 });
 
+app.get('/', (req, res) => {
+    res.redirect('/noFace/home');
+});
+
 app.use('/noFace/', noCache, routes);
 
 app.use((req, res) => {
@@ -65,7 +69,6 @@ app.listen('3000', function (req, res, e) {
         console.log(e);
     } else {
         console.log('Servidor iniciado');
-        res.redirect('/noFace/home')
     }
 });
 
