@@ -60,11 +60,12 @@ app.use((req, res) => {
     res.status(404).render('error/pageNotFound', { url: req.originalUrl });
 });
 
-app.listen('3000', function (e) {
+app.listen('3000', function (req, res, e) {
     if (e) {
         console.log(e);
     } else {
         console.log('Servidor iniciado');
+        res.redirect('/noFace/home')
     }
 });
 

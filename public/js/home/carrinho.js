@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                             const codigoGerado = data.codigo;
 
-                            let mensagem = `Olá, meu nome é ${userName} e meu telefone é ${userPhone}. Gostaria de confirmar a seguinte compra:\n\n`;
+                            let mensagem = `Olá, meu nome é ${userName} e meu contato é ${userPhone}. Gostaria de confirmar a seguinte compra:\n\n`;
                             carrinho.forEach((item, index) => {
                                 mensagem += `*${index + 1}. Produto:* ${item.nome}\n`;
                                 mensagem += `*Variação:* ${item.variacao.nome}\n`;
