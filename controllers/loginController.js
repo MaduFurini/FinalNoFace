@@ -19,7 +19,7 @@ const key = decodedKey.length === 32 ? decodedKey : crypto.createHash('sha256').
 const iv = crypto.randomBytes(16);
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'zoho',
     auth: {
         user: EMAIL,
         pass: SENHA
