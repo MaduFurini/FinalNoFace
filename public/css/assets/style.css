@@ -1034,8 +1034,8 @@ video {
   }
 }
 
-.bg-\[url\(\'\/images\/home_fundo\.webp\'\)\] {
-  background-image: url('/images/home_fundo.webp');
+.bg-\[url\(\'\/images\/IMG_2646\.jpg\'\)\] {
+  background-image: url('/images/IMG_2646.jpg');
 }
 .backdrop-blur-sm {
   --tw-backdrop-blur: blur(4px);
