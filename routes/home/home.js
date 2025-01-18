@@ -38,8 +38,8 @@ router.get('/sobre', async (req, res) => {
     res.render('home/sobre');
 });
 
-router.get('/portfolio', async (req, res) => {
-    res.render('home/portfolio');
+router.get('/lookbook', async (req, res) => {
+    res.render('home/lookbook');
 });
 
 router.get('/politicas', async (req, res) => {
