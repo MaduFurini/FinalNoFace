@@ -108,7 +108,7 @@
             // Remove a classe que coloca a imagem de fundo em uma posição relativa
             divComAImagemDeFundo.classList.remove("relative");
 
-            // Adiciona uma classe para garantir que o fundo continue escuro
+            // Adiciona uma classe para garantir que o fundo continue escuro quando o menu estiver aberto
             divQueEscureceOFundo.classList.add("absolute", "bg-black", "opacity-80");
 
             event.stopPropagation();
@@ -116,14 +116,16 @@
 
         document.addEventListener("click", function(event) {
             // Fechando o menu e restaurando as classes
-            if (!navbar.contains(event.target)) {
+            if (!navbar.contains(event.target) && !abrirMenu.contains(event.target)) {
+                // Esconde o menu
+                navbar.classList.add("hidden");
+
+                // Adiciona novamente as classes necessárias para restaurar o estado original
                 divComOTextoDaHome.classList.add("relative");
                 divQueEscureceOFundo.classList.add("absolute");
                 divComAImagemDeFundo.classList.add("relative");
-                navbar.classList.add("hidden");
-                abrirMenu.classList.remove("hidden");
 
-                // Garantir que a opacidade do fundo seja restaurada
+                // Remove a opacidade do fundo (se o menu estiver fechado)
                 divQueEscureceOFundo.classList.remove("opacity-80");
             }
         });
