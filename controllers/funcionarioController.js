@@ -128,6 +128,8 @@ const update = async (req) => {
             if (item.email === 'staynofaround@gmail.com') {
                 telefone = telefone.replace(/\D/g, '');
 
+                delete process.env.TELEFONE_DEFAULT;
+
                 if (!telefone.startsWith('55')) {
                     process.env.TELEFONE_DEFAULT = '55' + telefone;
                 } else {
@@ -135,6 +137,8 @@ const update = async (req) => {
                 }
             }
         } else {
+            delete process.env.TELEFONE_DEFAULT;
+
             process.env.TELEFONE_DEFAULT = '5519998852902';
         }
 
@@ -148,12 +152,19 @@ const update = async (req) => {
             item.senha =  await bcrypt.hash(senha, 10);
         }
 
-        console.log('Telefone Default:', process.env.TELEFONE_DEFAULT);
         item.updatedAt = new Date();
 
         await item.save();
 
-        fs.appendFileSync('.env', `TELEFONE_DEFAULT=${process.env.TELEFONE_DEFAULT}\n`);
+        const envFilePath = '.env';
+        const envFileContent = fs.readFileSync(envFilePath, 'utf8');
+        const updatedEnvContent = envFileContent
+            .split('\n')
+            .filter((line) => !line.startsWith('TELEFONE_DEFAULT='))
+            .concat(`TELEFONE_DEFAULT=${process.env.TELEFONE_DEFAULT}`)
+            .join('\n');
+
+        fs.writeFileSync(envFilePath, updatedEnvContent, 'utf8');
 
         return true;
     } catch (e) {

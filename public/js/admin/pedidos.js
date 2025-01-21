@@ -271,7 +271,6 @@ function buscarPedido(element) {
 
             let produtosContent = '';
             produtos.forEach(p => {
-                console.log(p);
                 produtosContent += `
                     <div>
                         <strong>Nome do Produto:</strong> ${p.nome}<br>

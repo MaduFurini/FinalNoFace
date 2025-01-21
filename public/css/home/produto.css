@@ -840,6 +840,10 @@ details p:hover,
 details {
     height: 20vh !important  ;
 }
+
+.detalhes ul{
+    line-height: 30px;
+}
 @media (min-width: 640px) {
     .sm\:h-80 {
         height: 20rem;

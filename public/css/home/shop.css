@@ -60,11 +60,6 @@ p:hover {
     transition: 0.5s;
 }
 
-.menu-item:hover {
-    cursor: pointer;
-    transform: scale(1.05);
-    transition: 0.5s;
-}
 
 .no-products {
     display: flex;

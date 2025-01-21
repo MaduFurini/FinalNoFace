@@ -89,9 +89,10 @@ document.getElementById('generateReportBtn').addEventListener('click', function 
             doc.text("Valor Total", 50, yOffset);
             doc.text("Status", 80, yOffset);
             doc.text("Observação", 120, yOffset);
-            doc.text("Forma pagamento", 180, yOffset);
-            doc.text("Data", 230, yOffset);
-            doc.text("Pago", 270, yOffset);
+            doc.text("Forma pagamento", 170, yOffset);
+            doc.text("Data", 220, yOffset);
+            doc.text("Pago", 250, yOffset);
+            doc.text("Contato", 265, yOffset);
             doc.line(10, yOffset + 5, 290, yOffset + 5);
 
             yOffset += 10;
@@ -105,10 +106,10 @@ document.getElementById('generateReportBtn').addEventListener('click', function 
                 doc.text(`R$ ${pedido.valorTotal.toFixed(2)}`, 50, yOffset);
                 doc.text(pedido.status, 80, yOffset);
                 doc.text(pedido.observacao === null ? ' ' : pedido.observacao, 120, yOffset);
-                doc.text(pedido.formaPagamento === null ? ' ' : pedido.formaPagamento, 180, yOffset);
-                doc.text(formattedDate, 230, yOffset);
-                doc.text(pedido.pago === 1 ? 'Sim' : 'Não', 270, yOffset);
-                doc.text(pedido.contato, 280, yOffset);
+                doc.text(pedido.formaPagamento === null ? ' ' : pedido.formaPagamento, 170, yOffset);
+                doc.text(formattedDate, 220, yOffset);
+                doc.text(pedido.pago === 1 ? 'Sim' : 'Não', 250, yOffset);
+                doc.text(pedido.contato, 265, yOffset);
                 yOffset += 10;
 
                 if (yOffset > 260) {

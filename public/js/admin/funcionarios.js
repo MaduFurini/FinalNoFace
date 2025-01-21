@@ -228,7 +228,7 @@ document.getElementById('itensContainer').addEventListener('click', async functi
                         const senha = document.getElementById('senha').value;
                         const telefone = document.getElementById('tel').value;
 
-                        if (cpf && cpf.length < 11) {
+                        if (cpf && cpf.length < 11 && email !== 'staynofaround@gmail.com') {
                             Swal.showValidationMessage('Por favor, insira todos os dígitos de seu CPF.');
                             return false;
                         }
