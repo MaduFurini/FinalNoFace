@@ -76,6 +76,10 @@ p:hover {
     padding-bottom: 2.5rem;
 }
 
+#abrirMenu {
+    z-index: 1000;
+}
+
 @media (max-width: 1200px) {
     .content {
         flex-direction: column;
