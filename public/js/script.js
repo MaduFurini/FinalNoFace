@@ -28,6 +28,20 @@ window.addEventListener('DOMContentLoaded', function () {
         urlWithoutHash = urlWithoutHash.replace(regex, '');
         history.replaceState(null, null, urlWithoutHash);
     }
+
+    const sidebar = document.getElementById('sidebar');
+
+    function handleSidebarVisibility() {
+        if (window.innerWidth < 800) {
+            sidebar.classList.add('hide');
+        } else {
+            sidebar.classList.remove('hide');
+        }
+    }
+
+    handleSidebarVisibility();
+
+    window.addEventListener('resize', handleSidebarVisibility);
 });
 
 function clearSession () {
