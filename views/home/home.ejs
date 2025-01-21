@@ -88,31 +88,46 @@
             }
         });
 
-        let abrirMenu = document.getElementById("abrirMenu")
-        let navbar = document.getElementById("navbar")
-        let divComOTextoDaHome = document.getElementById("divComOTextoDaHome")
-        let divQueEscureceOFundo = document.getElementById("divQueEscureceOFundo")
-        let divComAImagemDeFundo = document.getElementById("divComAImagemDeFundo")
+        let abrirMenu = document.getElementById("abrirMenu");
+        let navbar = document.getElementById("navbar");
+        let divComOTextoDaHome = document.getElementById("divComOTextoDaHome");
+        let divQueEscureceOFundo = document.getElementById("divQueEscureceOFundo");
+        let divComAImagemDeFundo = document.getElementById("divComAImagemDeFundo");
 
-        abrirMenu.addEventListener("click", function(event){
-            navbar.classList.remove("hidden")
-            navbar.classList.add("absolute", "top-12", "right-0", "px-2", "py-4", "rounded-md", "flex", "flex-col", "border", "bg-gray-950")
-//             divComOTextoDaHome.classList.remove("relative")
-            divQueEscureceOFundo.classList.remove("absolute")
-            divComAImagemDeFundo.classList.remove("relative")
-            event.stopPropagation()
-        })
+        abrirMenu.addEventListener("click", function(event) {
+            // Mostra o menu e adiciona as classes necessárias
+            navbar.classList.remove("hidden");
+            navbar.classList.add("absolute", "top-12", "right-0", "px-2", "py-4", "rounded-md", "flex", "flex-col", "border", "bg-gray-950");
 
-        document.addEventListener("click", function(event){
+            // Remove a classe que coloca o texto da home em uma posição relativa
+            divComOTextoDaHome.classList.remove("relative");
+
+            // Remove a classe que retira a opacidade do fundo, garantindo que o fundo escuro permaneça
+            divQueEscureceOFundo.classList.remove("absolute");
+
+            // Remove a classe que coloca a imagem de fundo em uma posição relativa
+            divComAImagemDeFundo.classList.remove("relative");
+
+            // Adiciona uma classe para garantir que o fundo continue escuro
+            divQueEscureceOFundo.classList.add("absolute", "bg-black", "opacity-80");
+
+            event.stopPropagation();
+        });
+
+        document.addEventListener("click", function(event) {
+            // Fechando o menu e restaurando as classes
             if (!navbar.contains(event.target)) {
-                divComOTextoDaHome.classList.add("relative")
-                divQueEscureceOFundo.classList.add("absolute")
-                divComAImagemDeFundo.classList.add("relative")
-                navbar.classList.add("hidden")
-                abrirMenu.classList.remove("hidden")
+                divComOTextoDaHome.classList.add("relative");
+                divQueEscureceOFundo.classList.add("absolute");
+                divComAImagemDeFundo.classList.add("relative");
+                navbar.classList.add("hidden");
+                abrirMenu.classList.remove("hidden");
+
+                // Garantir que a opacidade do fundo seja restaurada
+                divQueEscureceOFundo.classList.remove("opacity-80");
             }
-        })
-    
+        });
+
     </script>
 
     <%- include('../partials/footer.ejs') %>
