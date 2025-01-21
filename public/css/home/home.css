@@ -1,4 +1,5 @@
 body {
+    z-index: 1;
     background-color: white !important;
 }
 
@@ -76,9 +77,12 @@ p:hover {
     padding-bottom: 2.5rem;
 }
 
-#abrirMenu {
-    z-index: 1000;
+
+#navbar {
+    z-index: 1;
+    position: absolute;
 }
+
 
 @media (max-width: 1200px) {
     .content {
