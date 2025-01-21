@@ -348,7 +348,6 @@ document.addEventListener("DOMContentLoaded", () => {
         atualizarModal(carrinhoAtualizado);
         atualizarBotoes(carrinhoAtualizado);
 
-
         cartModal.classList.remove("hide");
         cartModal.classList.add("show");
     });
