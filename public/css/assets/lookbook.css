@@ -1,0 +1,132 @@
+.container {
+    margin-top: 10px;
+    background-color: rgb(3, 7, 18);
+    position: relative;
+}
+
+.content {
+    max-width: 120rem;
+    height: auto;
+    margin: 0 auto;
+    flex-direction: column;
+}
+
+.image-container {
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+
+.image {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    transition: transform 0.3s ease;
+}
+
+.text {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 5%;
+    margin-left: 20px;
+    width: 60%;
+    align-items: center;
+}
+
+.text h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.text p {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: white;
+}
+
+.text .btn {
+    display: inline-block;
+    padding: 10px 10px;
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    width: 40%;
+    text-align: center;
+}
+
+@media (max-width: 1200px) {
+    .content {
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 15px;
+    }
+
+    .image {
+        width: 350px;
+        bottom: 103% !important;
+    }
+
+    .text {
+        text-align: center;
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .content {
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 15px;
+    }
+
+    .image {
+        width: 300px;
+        bottom: -125% !important;
+    }
+
+    .text {
+        text-align: center;
+        padding-left: 0;
+        padding-bottom: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .image-container {
+        display: none;
+    }
+
+    .image {
+        display: none;
+    }
+
+    .container {
+        height: auto;
+        padding: 20px;
+    }
+
+    .text {
+        width: 100%;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin: 0;
+    }
+
+    .text h1,
+    .text p,
+    .text button {
+        text-align: center !important;
+    }
+}
