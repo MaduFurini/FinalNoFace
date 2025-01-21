@@ -80,6 +80,9 @@ p:hover {
     z-index: 1000;
 }
 
+#divQueEscureceOFundo {
+    z-index: 900;
+}
 @media (max-width: 1200px) {
     .content {
         flex-direction: column;
