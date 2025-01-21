@@ -41,4 +41,16 @@
             </div>
         </footer>
     </body>
+
+    <script>
+        function checkBackgroundColor() {
+            const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (isDarkMode) {
+                document.getElementById('logo').src = '/images/light_noFaceLogo.png';
+            }
+        }
+
+        window.onload = checkBackgroundColor;
+    </script>
 </html>
