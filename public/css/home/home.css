@@ -2,6 +2,7 @@
     margin-top: 10px;
     background-color: rgb(3, 7, 18);
     position: relative;
+    padding: 5px;
 }
 
 .content {
@@ -73,32 +74,33 @@ p:hover {
 
 @media (max-width: 1200px) {
     .content {
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 15px;
     }
 
     .text {
-        text-align: left;
-        padding-left: 50px;
-        padding-bottom: 50px;
+        text-align: center;
+        padding-left: 0;
     }
 
     .image {
-        width: 300px;
-        bottom: -105% !important;
+        width: 350px;
+        bottom: -130% !important;
     }
 }
 
 @media (max-width: 900px) {
     .content {
-        flex-direction: row;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 15px;
     }
 
     .text {
-        text-align: left;
-        padding-left: 50px;
-        padding-bottom: 50px;
+        text-align: center;
+        padding-left: 0;
+        padding-bottom: 30px;
     }
 
     .image {
@@ -111,11 +113,18 @@ p:hover {
     .content {
         flex-direction: column;
         justify-content: center;
+        align-items: center;
+        text-align: center;
     }
 
     .text {
-        text-align: center;
-        padding-left: 0;
+        text-align: center !important;
+        padding-left: 0 !important;
+        padding-right: 0;
+    }
+
+    .image-container {
+        display: none;
     }
 
     .image {
@@ -123,11 +132,25 @@ p:hover {
     }
 
     .container {
-        height: 40vh;
-        padding: 30px;
+        height: auto;
+        padding: 20px;
     }
 
     .md\:pb-32 {
         padding-bottom: 8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .text h1 {
+        font-size: 1.5rem;
+    }
+
+    .text p {
+        font-size: 0.9rem;
+    }
+
+    .text .btn {
+        padding: 8px 12px;
     }
 }
