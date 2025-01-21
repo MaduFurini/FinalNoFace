@@ -420,6 +420,7 @@ body {
     margin-top: 24px;
     width: 100%;
     color: var(--dark);
+
 }
 #content main .table-data > div {
     border-radius: 20px;
@@ -445,31 +446,53 @@ body {
 #content main .table-data .order {
     flex-grow: 1;
     flex-basis: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 #content main .table-data .order table {
-    width: 100%;
     border-collapse: collapse;
-}
-#content main .table-data .order table th {
-    padding-bottom: 12px;
-    padding-left: 10px;
-    font-size: 13px;
+    width: 100%;
+    max-width: 100%;
     text-align: center;
-    border-bottom: 1px solid var(--grey);
+    margin: auto;
 }
+
+#content main .table-data .order table th,
 #content main .table-data .order table td {
-    padding: 16px 10px;
-    text-align: center;
+    padding: 12px 8px;
+    font-size: 13px;
+    vertical-align: middle;
+    border: 1px solid var(--grey);
 }
+
+#content main .table-data .order table th {
+    background-color: var(--light-grey);
+    font-weight: bold;
+}
+
 #content main .table-data .order table td img {
     width: 36px;
     height: 36px;
     border-radius: 50%;
     object-fit: cover;
 }
+
 #content main .table-data .order table button {
-    margin-bottom: 10px;
+    margin: 8px 0 !important;
+    font-size: 12px;
+    padding: 6px 10px;
+    text-align: center;
+    cursor: pointer;
+    width: 80px;
 }
+
+#content main .table-data .order table button:hover{
+    transform: scale(1.1);
+    transition: 0.5s;
+}
+
 #content main .table-data .order table tbody tr:hover {
     background: var(--grey);
 }
@@ -657,7 +680,11 @@ tfoot td {
 
 @media screen and (max-width: 768px) {
     #sidebar {
-        width: 200px;
+        width: 60px;
+    }
+
+    #sidebar .side-menu li a {
+        width: calc(48px - (4px * 2));
     }
 
     #content {

@@ -60,6 +60,9 @@ button {
     border-radius: 5px;
     border: none;
 }
+label {
+    color: var(--dark);
+}
 .btn-danger {
     background-color: var(--red);
     color: var(--light);
