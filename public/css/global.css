@@ -111,11 +111,12 @@ label {
 }
 
 .logo-img {
-    content: url("public/images/stayNoFaceLogo.png");
+    content: url("public/images/light_noFaceLogo.png");
 }
+stayNoFaceLogo
 
 @media (prefers-color-scheme: dark) {
     .logo-img {
-        content: url("public/images/light_noFaceLogo.png");
+        content: url("public/images/stayNoFaceLogo.png");
     }
 }
