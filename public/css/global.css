@@ -109,14 +109,3 @@ label {
     background-color: rgba(0, 0, 0, 0.8) !important;
     z-index: 3000 !important;
 }
-
-.logo-img {
-    content: url("public/images/light_noFaceLogo.png");
-}
-stayNoFaceLogo
-
-@media (prefers-color-scheme: dark) {
-    .logo-img {
-        content: url("public/images/stayNoFaceLogo.png");
-    }
-}
