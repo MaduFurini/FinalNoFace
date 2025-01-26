@@ -1,6 +1,8 @@
         <footer>
             <div id="footer" class="items-center justify-center gap-7 py-8 grid md:grid-cols-3 px-5">
-                <a href="/noFace/home" class="mx-auto md:mx-0 md:w-32 w-24"><img src="/images/stayNoFaceLogo.png" alt="" class="transition hover:scale-105" /></a>
+                <a href="/noFace/home" class="logo mx-auto md:mx-0 md:w-32 w-24">
+                    <img src="/images/stayNoFaceLogo.png" alt="Logo" class="logo-img transition hover:scale-105" />
+                </a>
                 <div class="flex flex-col gap-2 justify-center text-center">
                     <p><a class="hover:opacity-80" href="/noFace/home/shop">Shop</a></p>
                     <p><a class="hover:opacity-80" href="/noFace/home/sobre">Sobre nós</a></p>
@@ -16,24 +18,10 @@
                             </svg>
                         </div>
                     </a>
-                    <a href="" class="hover:scale-105 transition">
+                    <a href="https://wa.me/5519998852902" class="hover:scale-105 transition">
                         <div class="w-fit rounded-full bg-gray-950 p-2 hover:bg-opacity-85">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="size-5">
-                                <path fill="#ffffff" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/>
-                            </svg>
-                        </div>
-                    </a>
-                    <a href="" class="hover:scale-105 transition">
-                        <div class="w-fit rounded-full bg-gray-950 p-2 hover:bg-opacity-85">
-                            <svg class="svg-inline--fa fa-tiktok size-5 text-white" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="tiktok" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                                <path fill="currentColor" d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"></path>
-                            </svg>
-                        </div>
-                    </a>
-                    <a href="" class="hover:scale-105 transition">
-                        <div class="w-fit rounded-full bg-gray-950 p-2 hover:bg-opacity-85">
-                            <svg class="svg-inline--fa fa-pinterest-p size-5 text-white" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="pinterest-p" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg="">
-                                <path fill="currentColor" d="M204 6.5C101.4 6.5 0 74.9 0 185.6 0 256 39.6 296 63.6 296c9.9 0 15.6-27.6 15.6-35.4 0-9.3-23.7-29.1-23.7-67.8 0-80.4 61.2-137.4 140.4-137.4 68.1 0 118.5 38.7 118.5 109.8 0 53.1-21.3 152.7-90.3 152.7-24.9 0-46.2-18-46.2-43.8 0-37.8 26.4-74.4 26.4-113.4 0-66.2-93.9-54.2-93.9 25.8 0 16.8 2.1 35.4 9.6 50.7-13.8 59.4-42 147.9-42 209.1 0 18.9 2.7 37.5 4.5 56.4 3.4 3.8 1.7 3.4 6.9 1.5 50.4-69 48.6-82.5 71.4-172.8 12.3 23.4 44.1 36 69.3 36 106.2 0 153.9-103.5 153.9-196.8C384 71.3 298.2 6.5 204 6.5z"></path>
+                            <svg class="svg-inline--fa fa-whatsapp size-5 text-white" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="whatsapp" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path fill="currentColor" d="M380.9 97.1C339.3 55.6 285.6 32 228.4 32 132 32 48 108.2 48 208c0 37.8 10.3 74.7 29.8 107L44.4 463.5l151-39.5c31.2 14.5 65.1 22 100 22h.1c96.5 0 180.4-76.1 180.4-176 .1-47.5-19.3-92.7-55-126.9zM228.4 416c-30.8 0-61.4-7.1-88.6-20.4l-5.9-3-89.7 23.3 23.8-87.3-3.8-6.1C54.4 291.3 46 250.8 46 208 46 126.1 123.5 64 228.4 64c48.6 0 94.5 18.7 129.2 52.7 33.7 33.1 52.3 76.4 52.2 122.3 0 86.7-75.1 177-181.4 177z"></path>
                             </svg>
                         </div>
                     </a>
@@ -41,16 +29,4 @@
             </div>
         </footer>
     </body>
-
-    <script>
-        function checkBackgroundColor() {
-            const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-            if (isDarkMode) {
-                document.getElementById('logo').src = '/images/light_noFaceLogo.png';
-            }
-        }
-
-        window.onload = checkBackgroundColor;
-    </script>
 </html>

@@ -465,6 +465,7 @@ body {
     font-size: 13px;
     vertical-align: middle;
     border: 1px solid var(--grey);
+    text-align: center;
 }
 
 #content main .table-data .order table th {
@@ -486,7 +487,6 @@ body {
     text-align: center;
     cursor: pointer;
     width: 80px;
-    display: block;
 }
 
 #content main .table-data .order table button:hover{

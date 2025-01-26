@@ -980,6 +980,7 @@ details {
         transform: translateY(-50%);
         z-index: 10;
         transition: opacity 0.5s ease-in-out;
+        padding: 10px;
     }
 
     .carousel-arrow {
@@ -998,9 +999,9 @@ details {
 
     #selected-image {
         position: relative;
-        padding: 0;
+        padding: 10px;
         width: 400px;
-        height: auto;
+        height: 450px;
         border-radius: 10px;
         transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         transform: scale(1);

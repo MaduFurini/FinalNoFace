@@ -23,6 +23,10 @@ p:hover {
     z-index: 1;
 }
 
+.produtoImg {
+    height: 35vh;
+}
+
 @media (max-width: 768px) {
     .md\:pb-32 {
         padding-bottom: 8rem;
