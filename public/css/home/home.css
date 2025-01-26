@@ -24,7 +24,7 @@ p:hover {
 }
 
 .produtoImg {
-    height: 35vh;
+    height: 30vh;
 }
 
 @media (max-width: 768px) {
