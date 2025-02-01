@@ -40,6 +40,11 @@ p:hover {
     height: 30vh;
 }
 
+#divComOTextoDaHome {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 @media (max-width: 768px) {
     .md\:pb-32 {
         padding-bottom: 8rem;
