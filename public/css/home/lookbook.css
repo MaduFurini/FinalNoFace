@@ -612,8 +612,12 @@ padding-top: 1.25rem;
 padding-bottom: 1.25rem;
 }
 .py-8 {
-padding-top: 2rem;
-padding-bottom: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 .text-center {
 text-align: center;
@@ -693,6 +697,10 @@ header a:hover{
     }
   }
   @media (min-width: 768px) {
+    .md\:py-5 {
+      padding-top: 1.25rem;
+      padding-bottom: 1.25rem;
+    }
     .md\:mx-0 {
       margin-left: 0px;
       margin-right: 0px;
