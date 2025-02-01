@@ -19,6 +19,19 @@ p:hover {
     padding-bottom: 2.5rem;
 }
 
+.py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.mt-40 {
+    margin-top: 10rem;
+}
+
+.w-36 {
+    width: 9rem;
+}
+
 #navbar {
     z-index: 1;
 }
@@ -31,6 +44,13 @@ p:hover {
     .md\:pb-32 {
         padding-bottom: 8rem;
     }
+    .md\:mt-0 {
+        margin-top: 0;
+    }
+    .mt\:w-44 {
+        width: 11rem;
+    }
+    
 }
 
 @media (max-width: 480px) {
