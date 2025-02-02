@@ -45,6 +45,11 @@ p:hover {
     margin: 0 !important;
 }
 
+#divComOTextoDaHome a{
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important;
+}
+
+
 @media (max-width: 768px) {
     .md\:pb-32 {
         padding-bottom: 8rem;
