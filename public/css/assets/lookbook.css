@@ -59,6 +59,32 @@
     text-align: center;
 }
 
+.lookbookHeader {
+    background: linear-gradient(to right, #131112, rgba(0, 0, 0, 1));
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    width: 100vw;
+    overflow: hidden;
+    height: 90vh;
+}
+
+.first-section {
+    width: 70%;
+    height: 100%;
+}
+
+.first-section img {
+    width: 40vw;
+    height: 100%;
+}
+
+.second-section img {
+    width: 50%;
+    height: 100%;
+}
+
 @media (max-width: 1200px) {
     .content {
         flex-direction: column;
@@ -97,6 +123,20 @@
 }
 
 @media (max-width: 768px) {
+    .lookbookHeader,
+    .second-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        text-align: center;
+        width: 100%;
+    }
+
+    .first-section {
+        display: none;
+    }
+
     .content {
         flex-direction: column;
         justify-content: center;
