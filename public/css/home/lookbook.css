@@ -525,6 +525,9 @@ width: fit-content;
 .w-full {
 width: 100%;
 }
+.w-40 {
+width: 10rem;
+}
 .min-w-32 {
 min-width: 8rem;
 }
@@ -697,6 +700,16 @@ header a:hover{
     }
   }
   @media (min-width: 768px) {
+    .md\:size-\[24rem\] {
+      height: 24rem;
+      width: 24rem;
+    }
+    .md\:justify-start {
+      justify-content: flex-start;
+    }
+    .md\:pl-10 {
+      padding-left: 2.5rem;
+    }
     .md\:py-5 {
       padding-top: 1.25rem;
       padding-bottom: 1.25rem;

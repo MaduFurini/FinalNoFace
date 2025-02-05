@@ -59,17 +59,6 @@
     text-align: center;
 }
 
-.lookbookHeader {
-    background: linear-gradient(to right, #131112, rgba(0, 0, 0, 1));
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    align-items: center;
-    width: 100vw;
-    overflow: hidden;
-    height: 90vh;
-}
-
 .first-section {
     width: 70%;
     height: 100%;
