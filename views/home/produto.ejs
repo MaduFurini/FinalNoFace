@@ -144,7 +144,7 @@
        function updateCarousel() {
            carouselImages.innerHTML = '';
 
-           for (let i = 0; i < 3; i++) {
+           for (let i = 0; i < 2; i++) {
                let index = (currentIndex + i) % images.length;
                let imgClone = images[index].cloneNode(true);
                carouselImages.appendChild(imgClone);
