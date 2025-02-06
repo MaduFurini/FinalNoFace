@@ -893,7 +893,7 @@ details {
 }
 
 .carousel-image {
-    width: 33.33%;
+    width: 50%;
     height: 100% ;
     object-fit: cover;
     cursor: pointer;
@@ -1059,9 +1059,6 @@ details {
     .carousel-footer {
         width: 30%;
     }
-    .carousel-image {
-        width: 33.33%;
-    }
 }
 
 @media (max-width: 768px) {
@@ -1079,10 +1076,6 @@ details {
     .carousel-footer {
         width: 20%;
     }
-    .carousel-image {
-        width: 100%;
-    }
-
     .carousel-nav {
         top: 30%;
     }
@@ -1100,10 +1093,6 @@ details {
     .carousel-arrow {
         font-size: 16px;
         padding: 6px;
-    }
-    .carousel-image {
-        width: 100%;
-        height: 200px;
     }
     .carousel-footer {
         width: 30%;

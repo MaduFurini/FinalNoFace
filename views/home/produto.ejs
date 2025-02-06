@@ -18,7 +18,7 @@
 
     <div class="produtoInfo mx-auto flex max-w-[40rem] flex-col items-center divide-gray-200 pt-14 pb-20 md:max-w-[70rem] xl:max-w-[100rem] md:flex-row md:divide-x-2">
         <div class="mainImg mt-3 md:mt-0 md:w-[40%]">
-          <img id="selected-image" src="<%= produto.imagens.length > 0 ? produto.imagens[0] : '/images/default.png' %>" alt="Imagem principal" class="mx-auto h-64 sm:h-80 md:h-96 p-2" />
+        <img id="selected-image" src="<%= produto.imagens.length > 0 ? produto.imagens[0] : '/images/default.png' %>" alt="Imagem principal" class="mx-auto h-64 sm:h-80 md:h-96 p-2" />
 
           <div class="carousel">
             <div id="carousel-container" class="carousel-container">
@@ -135,34 +135,61 @@
     <script src="/js/home/shop.js"></script>
     <script src="/js/home/carrinho.js"></script>
     <script>
-       const prevButton = document.getElementById('prev');
-       const nextButton = document.getElementById('next');
-       const carouselImages = document.getElementById('carousel-images');
-       const images = Array.from(carouselImages.getElementsByTagName('img'));
-       let currentIndex = 0;
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+        const allImages = Array.from(document.querySelectorAll('.carousel-image'));
+        const selectedImage = document.getElementById('selected-image');
+        const carouselContainer = document.getElementById('carousel-container');
 
-       function updateCarousel() {
-           carouselImages.innerHTML = '';
+        let currentImageIndex = 0;
+        const imagesPerView = 2;
 
-           for (let i = 0; i < 2; i++) {
-               let index = (currentIndex + i) % images.length;
-               let imgClone = images[index].cloneNode(true);
-               carouselImages.appendChild(imgClone);
-           }
-       }
+        const carouselImages = allImages.filter(img => !img.src.includes('tabelaMedidas.png'));
 
-       nextButton.addEventListener('click', () => {
-           currentIndex = (currentIndex + 1) % images.length;
-           updateCarousel();
-       });
+        function updateCarousel() {
+            const carouselWrapper = document.getElementById('carousel-images');
+            const totalImages = carouselImages.length;
+            let newImages = '';
 
-       prevButton.addEventListener('click', () => {
-           currentIndex = (currentIndex - 1 + images.length) % images.length;
-           updateCarousel();
-       });
+            for (let i = 0; i < imagesPerView; i++) {
+                let imgIndex = (currentImageIndex + i) % totalImages;
+                newImages += `<img src="${carouselImages[imgIndex].src}" alt="Imagem ${imgIndex + 1}" class="carousel-image" />`;
+            }
 
-       updateCarousel();
+            carouselWrapper.innerHTML = newImages;
 
+            const newCarouselImages = carouselWrapper.querySelectorAll('.carousel-image');
+            newCarouselImages.forEach(image => {
+                image.addEventListener('click', () => {
+                    selectedImage.src = image.src;
+
+                    newCarouselImages.forEach(img => img.classList.remove('selected-image'));
+
+                    image.classList.add('selected-image');
+                });
+            });
+
+            const tabelaMedidasImage = document.querySelector('.carousel-footer img');
+            tabelaMedidasImage.addEventListener('click', () => {
+                selectedImage.src = tabelaMedidasImage.src;
+
+                newCarouselImages.forEach(img => img.classList.remove('selected-image'));
+                tabelaMedidasImage.classList.add('selected-image');
+            });
+        }
+
+        nextButton.addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
+            updateCarousel();
+        });
+
+        prevButton.addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex - 1 + carouselImages.length) % carouselImages.length;
+            updateCarousel();
+        });
+
+        updateCarousel();
     </script>
+
     <%- include('../partials/footer.ejs') %>
 </html>
