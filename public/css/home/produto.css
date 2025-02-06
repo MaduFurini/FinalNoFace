@@ -850,9 +850,87 @@ details {
     padding: 15px;
     line-height: 30px;
 }
-#carousel-nav{
-    display: none;
+
+.mainImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    padding: 20px;
+    height: 70vh;
 }
+
+.carousel {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    margin: 0 !important;
+    width: 100%;
+    height: 20vh !important;
+}
+
+.carousel-container {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    width: 80%;
+}
+
+.carousel-footer {
+    width: 20%;
+    height: 100%;
+}
+
+.carousel-footer img {
+    width: 100%;
+}
+
+.carousel-images {
+    display: flex;
+    width: 100%;
+}
+
+.carousel-image {
+    width: 33.33%;
+    height: 100% ;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease, border 0.3s ease;
+}
+
+.carousel-image.selected {
+    border: 3px solid #007bff;
+    transform: scale(1.1);
+}
+
+.carousel-nav {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    transform: translateY(-50%);
+}
+
+.carousel-arrow {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#selected-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.produtoInformacoes {
+    text-align: center;
+}
+
 @media (min-width: 640px) {
     .sm\:h-80 {
         height: 20rem;
@@ -867,6 +945,9 @@ details {
     }
 }
 @media (min-width: 768px) {
+    .produtoInformacoes {
+        text-align: left ;
+    }
     .content {
         flex-direction: column;
         justify-content: center;
@@ -966,54 +1047,65 @@ details {
         color: rgb(255 255 255 / 0.5);
     }
 }
-@media screen and (max-width: 768px) {
-    .spoilers {
-        display: none;
+
+@media (min-width: 640px) {
+    .carousel {
+        height: 25vh;
+    }
+    .carousel-container {
+        width: 90%;
+    }
+    .carousel-footer {
+        width: 10%;
+    }
+    .carousel-image {
+        width: 33.33%;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainImg {
+        width: 80vw;
+        height: 90vh;
     }
 
-    #carousel-nav {
-        position: relative;
-        top: 250px;
-        gap: 10px;
-        display: flex;
-        justify-content: space-between;
-        transform: translateY(-50%);
-        z-index: 10;
-        transition: opacity 0.5s ease-in-out;
-        padding: 10px;
+    .carousel {
+        height: auto;
+    }
+    .carousel-container {
+        width: 90%;
+    }
+    .carousel-footer {
+        width: 10%;
+    }
+    .carousel-image {
+        width: 100%;
+    }
+
+    .carousel-nav {
+        top: 30%;
     }
 
     .carousel-arrow {
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        font-size: 24px;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        transition: opacity 0.3s ease-in-out;
+        padding: 8px;
+        font-size: 18px;
     }
+}
 
-    .carousel-arrow:hover {
-        opacity: 0.7;
+@media (max-width: 480px) {
+    .carousel-arrow {
+        font-size: 16px;
+        padding: 6px;
     }
-
-    #selected-image {
-        position: relative;
-        padding: 10px;
-        width: 400px;
-        height: 450px;
-        border-radius: 10px;
-        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-        transform: scale(1);
+    .carousel-image {
+        width: 100%;
+        height: 200px;
     }
-
-    .fade-out {
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
+    .carousel-footer {
+        width: 20%;
     }
-
-    .fade-in {
-        opacity: 1;
-        transition: opacity 0.5s ease-in-out;
+    .carousel-footer img{
+        width: 100%;
+        height: 100%;
     }
 }

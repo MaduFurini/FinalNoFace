@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     produto: produto.id,
                     nome: produto.nome,
                     preco: produto.preco,
-                    img: produto.img,
+                    img: produto.firstImg,
                     variacao: {
                         nome: selectedVariacao.nome,
                         data: selectedVariacao.id
@@ -276,7 +276,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 sessionStorage.setItem("carrinho", JSON.stringify(carrinho));
                 atualizarModal(carrinho);
                 atualizarBotoes(carrinho);
-                Swal.fire('Removido', 'O item foi removido do carrinho.', 'success');
+                Swal.fire({
+                    title: 'Removido',
+                    text: 'O item foi removido do carrinho.',
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn-dark'
+                    }
+                });
             });
         });
 

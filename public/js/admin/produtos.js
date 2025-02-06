@@ -43,7 +43,7 @@ document.getElementById('newItem').addEventListener('click', function () {
     fetch('categorias?status=1', {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
             'x-internal-request': 'true'
         }
     })
@@ -78,8 +78,8 @@ document.getElementById('newItem').addEventListener('click', function () {
                         <input type="number" class="input" id="preco" name="preco" step="0.1" required>
                     </div>
                     <div class="form-group">
-                        <label for="imagem">Foto</label>
-                        <input type="file" id="imagem" name="imagem">
+                        <label for="imagens">Fotos</label>
+                        <input type="file" id="imagens" name="imagens[]" multiple>
                     </div>
                 </form>
             `,
@@ -95,7 +95,7 @@ document.getElementById('newItem').addEventListener('click', function () {
                     const categoria = document.getElementById('categoria').value;
                     const descricao = document.getElementById('descricao').value;
                     const preco = document.getElementById('preco').value;
-                    const imagem = document.getElementById('imagem').files[0];
+                    const imagens = document.getElementById('imagens').files;
 
                     if (!nome || !categoria || !preco) {
                         Swal.showValidationMessage('Por favor, preencha todos os campos obrigatórios.');
@@ -108,8 +108,10 @@ document.getElementById('newItem').addEventListener('click', function () {
                     formData.append('descricao', descricao);
                     formData.append('preco', preco);
 
-                    if (imagem) {
-                        formData.append('imagem', imagem);
+                    if (imagens.length > 0) {
+                        for (let i = 0; i < imagens.length; i++) {
+                            formData.append('imagens', imagens[i]);
+                        }
                     }
 
                     openVariacoesModal(formData, false);
@@ -340,96 +342,113 @@ function openVariacoesModal(formData, produtoId) {
     }
 }
 
-
-document.getElementById('itensContainer').addEventListener('click', function (event) {
+document.getElementById('itensContainer').addEventListener('click', async function (event) {
     const target = event.target;
     const id = target.dataset.id;
 
     if (target && target.id === 'editBtn') {
-        const createOptions = (items) => items.map(item => `<option value="${item.id}">${item.nome}</option>`).join('');
+        try {
+            const categorias = await fetch('categorias?status=1', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', 'x-internal-request': 'true' }
+            }).then(res => res.json());
 
-        Promise.all([
-            fetch('categorias?status=1', { method: 'GET', headers: { 'Content-Type': 'application/json', 'x-internal-request': 'true' } }).then(res => res.json()),
-        ])
-            .then(([categorias]) => {
-                const catOptions = createOptions(categorias.itens);
+            const produto = await fetch(`produtos/${id}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', 'x-internal-request': 'true' }
+            }).then(res => res.json());
 
-                return fetch(`produtos/${id}`, { method: 'GET', headers: { 'Content-Type': 'application/json', 'x-internal-request': 'true' } })
-                    .then(res => res.json())
-                    .then(produto => ({ catOptions, produto }));
-            })
-            .then(({ catOptions, produto }) => {
-                Swal.fire({
-                    title: 'Atualizar produto',
-                    html: `
-                        <form id="createForm" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label for="nome">Nome</label>
-                                <input type="text" class="input" id="nome" name="nome" value="${produto.nome || ''}">
-                            </div>
-                            <div class="form-group">
-                                <label for="categoria">Categoria</label>
-                                <select id="categoria" name="categoria" class="input">
-                                    <option value="" disabled selected>${produto.categoria}</option>
-                                    ${catOptions}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="descricao">Descrição</label>
-                                <input type="text" class="input" id="descricao" name="descricao" value="${produto.descricao || ''}">
-                            </div>
-                            <div class="form-group">
-                                <label for="preco">Preço</label>
-                                <input type="number" class="input" id="preco" name="preco" value="${produto.preco || ''}" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label for="imagem">Foto</label>
-                                <input type="file" id="imagem" name="imagem" value="teste">
-                            </div>
-                            <button onclick="removeImg(${produto.id})" class="btn-danger">Remover imagem</button>
-                        </form>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Confirmar',
-                    cancelButtonText: 'Cancelar',
-                    customClass: {
-                        confirmButton: 'btn-dark-pattern',
-                        cancelButton: 'btn-light-pattern'
-                    },
-                    preConfirm: () => {
-                        const nome = document.getElementById('nome').value;
-                        const categoria = document.getElementById('categoria').value;
-                        const descricao = document.getElementById('descricao').value;
-                        const preco = document.getElementById('preco').value;
-                        const imagem = document.getElementById('imagem').files[0];
+            const catOptions = categorias.itens.map(item => `<option value="${item.id}">${item.nome}</option>`).join('');
 
-                        const formData = new FormData();
-                        formData.append('nome', nome);
-                        formData.append('categoria', categoria);
-                        formData.append('descricao', descricao);
-                        formData.append('preco', preco);
+            const imagemHTML = produto.imagens.map(img => {
+                if (img !== 'Nenhuma imagem disponível') {
+                    return `
+                        <div class="image-container">
+                            <img src="${img}" />
+                            <input type="checkbox" class="remove-img" data-path="${img}">
+                        </div>
+                    `;
+                }
+                return '';
+            }).join('');
 
-                        if (imagem) {
-                            formData.append('imagem', imagem);
-                        }
+            Swal.fire({
+                title: 'Atualizar produto',
+                html: `
+                    <form id="updateForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="nome">Nome</label>
+                            <input type="text" class="input" id="nome" name="nome" value="${produto.nome || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoria</label>
+                            <select id="categoria" name="categoria" class="input">
+                                <option value="" disabled selected>${produto.categoria}</option>
+                                ${catOptions}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="descricao">Descrição</label>
+                            <input type="text" class="input" id="descricao" name="descricao" value="${produto.descricao || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label for="preco">Preço</label>
+                            <input type="number" class="input" id="preco" name="preco" value="${produto.preco || ''}" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Imagens Atuais - selecione para excluí-las</label>
+                            <div id="imagensAtuais">${imagemHTML || '<p>Nenhuma imagem</p>'}</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="imagens">Novas Imagens</label>
+                            <input type="file" id="imagens" name="imagens" multiple>
+                        </div>
+                    </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Atualizar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn-dark'
+                },
+                preConfirm: async () => {
+                    const nome = document.getElementById('nome').value;
+                    const categoria = document.getElementById('categoria').value;
+                    const descricao = document.getElementById('descricao').value;
+                    const preco = document.getElementById('preco').value;
+                    const imagens = document.getElementById('imagens').files;
 
-                        openVariacoesModal(formData, id);
+                    const removerImagens = Array.from(document.querySelectorAll('.remove-img:checked')).map(checkbox => checkbox.dataset.path);
+
+                    const formData = new FormData();
+                    formData.append('nome', nome);
+                    formData.append('categoria', categoria);
+                    formData.append('descricao', descricao);
+                    formData.append('preco', preco);
+
+                    for (const imagem of imagens) {
+                        formData.append('imagens', imagem);
                     }
-                });
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Erro',
-                    text: `Erro ao carregar os dados: ${error.message}`,
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        confirmButton: 'btn-dark-pattern',
-                    }
-                });
+
+                    formData.append('removerImagens', JSON.stringify(removerImagens));
+
+                    openVariacoesModal(formData, id);
+                }
             });
+        } catch (error) {
+            Swal.fire({
+                title: 'Erro',
+                text: `Erro ao carregar os dados: ${error.message}`,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn-dark-pattern'
+                }
+            });
+        }
     }
 
+    // Ação de excluir produto
     if (target && target.id === 'deleteBtn') {
         Swal.fire({
             title: 'Tem certeza?',
@@ -479,7 +498,6 @@ document.getElementById('itensContainer').addEventListener('click', function (ev
         });
     }
 });
-
 
 document.getElementById('searchInput').addEventListener('input', function () {
     const searchTerm = document.getElementById('searchInput').value;
