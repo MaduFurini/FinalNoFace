@@ -143,20 +143,17 @@
     <script src="/js/home/shop.js"></script>
     <script src="/js/home/carrinho.js"></script>
     <script>
-        // Selecionando elementos DOM
         const prevButton = document.getElementById('prev');
         const nextButton = document.getElementById('next');
         const carouselImages = document.querySelectorAll('.carousel-image');
         const selectedImage = document.getElementById('selected-image');
         const carouselContainer = document.getElementById('carousel-container');
-        let currentImageIndex = 0; // Controla qual conjunto de imagens está sendo exibido
+        let currentImageIndex = 0;
 
-        // Função para atualizar o carrossel
         function updateCarousel() {
           const firstThreeImages = document.getElementById('carousel-images');
           const remainingImages = document.getElementById('carousel-images-remaining');
 
-          // Se estamos no início (exibindo as primeiras 3 imagens)
           if (currentImageIndex === 0) {
             firstThreeImages.style.display = 'flex';
             remainingImages.style.display = 'none';
@@ -166,33 +163,26 @@
           }
         }
 
-        // Navegação para a próxima imagem
         nextButton.addEventListener('click', () => {
-          currentImageIndex = (currentImageIndex + 1) % 2; // Alterna entre o conjunto 1 (primeiras 3 imagens) e o conjunto 2 (restantes)
+          currentImageIndex = (currentImageIndex + 1) % 2;
           updateCarousel();
         });
 
-        // Navegação para a imagem anterior
         prevButton.addEventListener('click', () => {
-          currentImageIndex = (currentImageIndex - 1 + 2) % 2; // Alterna entre o conjunto 2 e o conjunto 1
+          currentImageIndex = (currentImageIndex - 1 + 2) % 2;
           updateCarousel();
         });
 
-        // Atualiza a imagem principal ao clicar na imagem do carrossel
         carouselImages.forEach(image => {
           image.addEventListener('click', () => {
-            // Atualiza a imagem principal
             selectedImage.src = image.src;
 
-            // Remove a classe 'selected' de todas as imagens
             carouselImages.forEach(img => img.classList.remove('selected'));
 
-            // Adiciona a classe 'selected' à imagem clicada
             image.classList.add('selected');
           });
         });
 
-        // Inicializa o carrossel exibindo as primeiras 3 imagens
         updateCarousel();
 
     </script>
