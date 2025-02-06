@@ -874,12 +874,13 @@ details {
     display: flex;
     overflow: hidden;
     position: relative;
-    width: 80%;
+    width: 70%;
 }
 
 .carousel-footer {
-    width: 20%;
+    width: 30%;
     height: 100%;
+    object-fit: cover;
 }
 
 .carousel-footer img {
@@ -1056,7 +1057,7 @@ details {
         width: 90%;
     }
     .carousel-footer {
-        width: 10%;
+        width: 30%;
     }
     .carousel-image {
         width: 33.33%;
@@ -1073,10 +1074,10 @@ details {
         height: auto;
     }
     .carousel-container {
-        width: 90%;
+        width: 70%;
     }
     .carousel-footer {
-        width: 10%;
+        width: 20%;
     }
     .carousel-image {
         width: 100%;
@@ -1093,6 +1094,9 @@ details {
 }
 
 @media (max-width: 480px) {
+    .carousel-container {
+        width: 70%;
+    }
     .carousel-arrow {
         font-size: 16px;
         padding: 6px;
@@ -1102,7 +1106,7 @@ details {
         height: 200px;
     }
     .carousel-footer {
-        width: 20%;
+        width: 30%;
     }
     .carousel-footer img{
         width: 100%;

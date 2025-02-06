@@ -28,16 +28,8 @@
               </div>
 
               <div id="carousel-images" class="carousel-images">
-                <% const firstThreeImages = produto.imagens.slice(0, 3); %>
-                <% firstThreeImages.forEach((img, index) => { %>
+                <%  produto.imagens.forEach((img, index) => { %>
                   <img src="<%= img %>" alt="Imagem <%= index + 1 %>" class="carousel-image" />
-                <% }) %>
-              </div>
-
-              <div id="carousel-images-remaining" class="carousel-images" style="display:none;">
-                <% const remainingImages = produto.imagens.slice(3); %>
-                <% remainingImages.forEach((img, index) => { %>
-                  <img src="<%= img %>" alt="Imagem <%= index + 4 %>" class="carousel-image" />
                 <% }) %>
               </div>
             </div>
@@ -143,47 +135,33 @@
     <script src="/js/home/shop.js"></script>
     <script src="/js/home/carrinho.js"></script>
     <script>
-        const prevButton = document.getElementById('prev');
-        const nextButton = document.getElementById('next');
-        const carouselImages = document.querySelectorAll('.carousel-image');
-        const selectedImage = document.getElementById('selected-image');
-        const carouselContainer = document.getElementById('carousel-container');
-        let currentImageIndex = 0;
+       const prevButton = document.getElementById('prev');
+       const nextButton = document.getElementById('next');
+       const carouselImages = document.getElementById('carousel-images');
+       const images = Array.from(carouselImages.getElementsByTagName('img'));
+       let currentIndex = 0;
 
-        function updateCarousel() {
-          const firstThreeImages = document.getElementById('carousel-images');
-          const remainingImages = document.getElementById('carousel-images-remaining');
+       function updateCarousel() {
+           carouselImages.innerHTML = '';
 
-          if (currentImageIndex === 0) {
-            firstThreeImages.style.display = 'flex';
-            remainingImages.style.display = 'none';
-          } else if (currentImageIndex === 1) {
-            firstThreeImages.style.display = 'none';
-            remainingImages.style.display = 'flex';
-          }
-        }
+           for (let i = 0; i < 3; i++) {
+               let index = (currentIndex + i) % images.length;
+               let imgClone = images[index].cloneNode(true);
+               carouselImages.appendChild(imgClone);
+           }
+       }
 
-        nextButton.addEventListener('click', () => {
-          currentImageIndex = (currentImageIndex + 1) % 2;
-          updateCarousel();
-        });
+       nextButton.addEventListener('click', () => {
+           currentIndex = (currentIndex + 1) % images.length;
+           updateCarousel();
+       });
 
-        prevButton.addEventListener('click', () => {
-          currentImageIndex = (currentImageIndex - 1 + 2) % 2;
-          updateCarousel();
-        });
+       prevButton.addEventListener('click', () => {
+           currentIndex = (currentIndex - 1 + images.length) % images.length;
+           updateCarousel();
+       });
 
-        carouselImages.forEach(image => {
-          image.addEventListener('click', () => {
-            selectedImage.src = image.src;
-
-            carouselImages.forEach(img => img.classList.remove('selected'));
-
-            image.classList.add('selected');
-          });
-        });
-
-        updateCarousel();
+       updateCarousel();
 
     </script>
     <%- include('../partials/footer.ejs') %>
