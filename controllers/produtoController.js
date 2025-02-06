@@ -2,23 +2,13 @@ const Variacao = require('../models/variacao');
 const Produto = require('../models/produto');
 const Categoria = require('../models/categoria');
 const ProdutoPedido = require('../models/produtoPedido');
+const ProdutoImagens = require("../models/produtoImagens");
 
 const { Op, Sequelize} = require('sequelize');
 const path = require("path");
 const multer = require('multer');
 const fs = require("fs");
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/images/produtos');
-    },
-    filename: function (req, file, cb) {
-        const tempFileName = 'temp_' + Date.now() + path.extname(file.originalname);
-        cb(null, tempFileName);
-    }
-});
-
-const upload = multer({ storage: storage });
+const upload = require("../config/multerConfig");
 
 const index = async (req) => {
     const page = parseInt(req.query.page) || 1;
@@ -64,6 +54,7 @@ const index = async (req) => {
 
         const categoriaIds = itens.map(item => item.id_categoria);
         const variacoesIds = itens.map(item => item.id_variacao);
+        const imgIds = itens.map(item => item.id);
 
         const categorias = await Categoria.findAll({
             where: {
@@ -87,12 +78,20 @@ const index = async (req) => {
             variacaoMap[variacao.id] = variacao.nome;
         });
 
-        const produtosInfo = itens.map(item => ({
-            ...item.dataValues,
-            categoria: categoriaMap[item.id_categoria] || 'Categoria não encontrada',
-            variacao: variacaoMap[item.id_variacao] || 'Variação não encontrada'
-        }));
+        const produtosInfo = await Promise.all(itens.map(async (item) => {
+            const produtoImagens = await ProdutoImagens.findAll({
+                where: { id_produto: item.id }
+            });
 
+            const imagens = produtoImagens.map(img => img.img);
+
+            return {
+                ...item.dataValues,
+                categoria: categoriaMap[item.id_categoria] || 'Categoria não encontrada',
+                variacao: variacaoMap[item.id_variacao] || 'Variação não encontrada',
+                firstImg: imagens.length > 0 ? imagens[0] : null
+            };
+        }));
 
         return { itens: produtosInfo, currentPage: page, totalPages };
     } catch (e) {
@@ -105,12 +104,6 @@ const indexHome = async (req) => {
         const result = await Produto.findAndCountAll({
             where: {
                 status: 1,
-                // img: {
-                //     [Op.and]: [
-                //         { [Op.ne]: null },
-                //         { [Op.ne]: '' }
-                //     ]
-                // },
                 id_referencia: {
                     [Op.is]: null
                 }
@@ -122,7 +115,48 @@ const indexHome = async (req) => {
         });
 
         const itens = result.rows;
-        return { itens };
+
+        const categoriaIds = itens.map(item => item.id_categoria);
+        const variacoesIds = itens.map(item => item.id_variacao);
+
+        const categorias = await Categoria.findAll({
+            where: {
+                id: categoriaIds
+            }
+        });
+
+        const variacoes = await Variacao.findAll({
+            where: {
+                id: variacoesIds
+            }
+        });
+
+        const categoriaMap = {};
+        categorias.forEach(categoria => {
+            categoriaMap[categoria.id] = categoria.nome;
+        });
+
+        const variacaoMap = {};
+        variacoes.forEach(variacao => {
+            variacaoMap[variacao.id] = variacao.nome;
+        });
+
+        const produtosInfo = await Promise.all(itens.map(async (item) => {
+            const produtoImagens = await ProdutoImagens.findAll({
+                where: { id_produto: item.id }
+            });
+
+            const imagens = produtoImagens.map(img => img.img);
+
+            return {
+                ...item.dataValues,
+                categoria: categoriaMap[item.id_categoria] || 'Categoria não encontrada',
+                variacao: variacaoMap[item.id_variacao] || 'Variação não encontrada',
+                firstImg: imagens.length > 0 ? imagens[0] : null
+            };
+        }));
+
+        return { itens: produtosInfo };
     } catch (e) {
         return { error: e.message };
     }
@@ -147,15 +181,38 @@ const indexShop = async (req) => {
             },
         });
 
-        const produtosPorCategoria = categorias.reduce((map, categoria) => {
-            map[categoria.id] = produtos.filter(
+        const categoriaMap = {};
+        categorias.forEach(categoria => {
+            categoriaMap[categoria.id] = categoria.nome;
+        });
+
+        const produtosPorCategoria = await Promise.all(categorias.map(async (categoria) => {
+            const produtosDaCategoria = produtos.filter(
                 produto => produto.id_categoria === categoria.id
             );
+
+            const produtosComImagens = await Promise.all(produtosDaCategoria.map(async (produto) => {
+                const produtoImagens = await ProdutoImagens.findAll({
+                    where: { id_produto: produto.id }
+                });
+
+                const imagens = produtoImagens.map(img => img.img);
+                return {
+                    ...produto.dataValues,
+                    categoria: categoriaMap[produto.id_categoria] || 'Categoria não encontrada',
+                    firstImg: imagens.length > 0 ? imagens[0] : null
+                };
+            }));
+
+            return { categoria, produtosComImagens };
+        }));
+
+        const produtosPorCategoriaMap = produtosPorCategoria.reduce((map, { categoria, produtosComImagens }) => {
+            map[categoria.id] = produtosComImagens;
             return map;
         }, {});
 
-
-        return { categorias, produtosPorCategoria };
+        return { categorias, produtosPorCategoria: produtosPorCategoriaMap };
     } catch (e) {
         return { error: e.message };
     }
@@ -200,7 +257,7 @@ const indexVariacoes = async (req) => {
 };
 
 const store = async (req) => {
-    const { nome, categoria, variacao, descricao, preco, imagem, variacoes } = req.body;
+    const { nome, categoria, variacao, descricao, preco, variacoes } = req.body;
 
     try {
         const produtoExistente = await Produto.findOne({
@@ -213,7 +270,7 @@ const store = async (req) => {
         });
 
         if (produtoExistente) {
-            return { error: 'Produto já existente' }
+            return { error: 'Produto já existente' };
         }
 
         const produto = await Produto.create({
@@ -221,20 +278,30 @@ const store = async (req) => {
             nome: nome,
             descricao: descricao,
             preco: preco,
-            img: '',
             status: 1,
             createdAt: new Date(),
             updatedAt: new Date()
         });
 
-        if (req.file) {
-            const newFileName = `${produto.id}${path.extname(req.file.originalname)}`;
-            const newFilePath = path.join('public/images/produtos', newFileName);
+        const pastaProduto = path.join('public/images/produtos', String(produto.id));
 
-            fs.renameSync(req.file.path, newFilePath);
+        if (!fs.existsSync(pastaProduto)) {
+            fs.mkdirSync(pastaProduto, { recursive: true });
+        }
 
-            produto.img = `/images/produtos/${newFileName}`;
-            await produto.save();
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const newFilePath = path.join(pastaProduto, file.filename);
+
+                fs.renameSync(file.path, newFilePath);
+
+                await ProdutoImagens.create({
+                    id_produto: produto.id,
+                    img: `/images/produtos/${produto.id}/${file.filename}`,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
+            }
         }
 
         const variacoesArray = JSON.parse(variacoes);
@@ -251,7 +318,6 @@ const store = async (req) => {
                     nome: produto.nome,
                     descricao: produto.descricao,
                     preco: produto.preco,
-                    img: produto.img,
                     status: produto.status,
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -266,10 +332,10 @@ const store = async (req) => {
     } catch (e) {
         return { error: "Erro ao criar produto" };
     }
-}
+};
 
 const update = async (req) => {
-    const { nome, categoria, descricao, preco, imagem, status, removeImg, variacoes } = req.body;
+    const { nome, categoria, descricao, preco, status, removerImagens, variacoes } = req.body;
     const { id } = req.params;
 
     try {
@@ -292,7 +358,7 @@ const update = async (req) => {
             });
 
             if (produtoExistente) {
-                return { error: 'Produto já existente' }
+                return { error: 'Produto já existente' };
             }
         }
 
@@ -302,36 +368,49 @@ const update = async (req) => {
         item.preco = preco || item.preco;
         item.status = status === false ? 0 : 1 || item.status;
 
-       if (req.file) {
-            const newFileName = `${item.id}${path.extname(req.file.originalname)}`;
-            const newFilePath = path.join('public/images/produtos', newFileName);
+        const pastaProduto = path.join('public/images/produtos', String(item.id));
 
-            fs.renameSync(req.file.path, newFilePath);
-
-            item.img = `/images/produtos/${newFileName}`;
-            await item.save();
+        if (!fs.existsSync(pastaProduto)) {
+            fs.mkdirSync(pastaProduto, { recursive: true });
         }
 
-        if (removeImg) {
-            if (item.img) {
-                const imagePath = path.join('public', item.img);
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const newFilePath = path.join(pastaProduto, file.filename);
 
+                fs.renameSync(file.path, newFilePath);
+
+                await ProdutoImagens.create({
+                    id_produto: item.id,
+                    img: `/images/produtos/${item.id}/${file.filename}`,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
+            }
+        }
+
+        if (removerImagens) {
+            let imagensArray = Array.isArray(removerImagens) ? removerImagens : JSON.parse(removerImagens);
+
+            for (let imgPath of imagensArray) {
+                const imagePath = path.join('public', imgPath);
                 if (fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
                 }
 
-                item.img = null;
-                await item.save();
+                await ProdutoImagens.destroy({
+                    where: {
+                        id_produto: id,
+                        img: imgPath
+                    }
+                });
             }
         }
 
         item.updatedAt = new Date();
-
         await item.save();
 
         const idRef = item.id;
-        const img = item.img
-
         const produtosFilhos = await Produto.findAll({
             where: {
                 id_referencia: item.id
@@ -352,7 +431,6 @@ const update = async (req) => {
 
         for (const produtoFilho of produtosFilhos) {
             const variacaoId = produtoFilho.id_variacao;
-
             if (!variacoesAtivas.has(variacaoId)) {
                 produtoFilho.status = 0;
                 produtoFilho.updatedAt = new Date();
@@ -385,7 +463,7 @@ const update = async (req) => {
                 }
 
             } catch (e) {
-                console.error("Erro ao processar a variação:", e.message);
+                return { error: "Erro ao atualizar produto" };
             }
         }
 
@@ -393,7 +471,7 @@ const update = async (req) => {
     } catch (e) {
         return { error: "Erro ao atualizar produto" };
     }
-}
+};
 
 const destroy = async (req) => {
     const { id } = req.params;
@@ -434,6 +512,40 @@ const destroy = async (req) => {
 
             return { message: 'Produto inativado devido a vínculos existentes' };
         } else {
+            const imgProdutos = await ProdutoImagens.findAll({
+                where: {
+                    id_produto: item.id
+                }
+            });
+
+            for (const img of imgProdutos) {
+                const imgPath = path.join('public', img.img);
+                const directoryPath = path.join('public/images/produtos/', String(item.id));
+
+                if (fs.existsSync(imgPath)) {
+                    const stats = fs.statSync(imgPath);
+
+                    if (stats.isDirectory()) {
+                        fs.rmSync(imgPath, { recursive: true, force: true });
+                    } else {
+                        fs.unlinkSync(imgPath);
+                    }
+                }
+
+                if (fs.existsSync(directoryPath)) {
+                    const stats = fs.statSync(directoryPath);
+
+                    if (stats.isDirectory() && fs.readdirSync(directoryPath).length === 0) {
+                        fs.rmdirSync(directoryPath);
+                    }
+                }
+                await ProdutoImagens.destroy({
+                    where: {
+                        id: img.id
+                    }
+                });
+            }
+
             if (item.img) {
                 const imagePath = path.join('public', item.img);
 
@@ -469,17 +581,26 @@ const show = async (req) => {
         }
 
         const categoria = await Categoria.findByPk(item.id_categoria);
+
         const variacao = await Variacao.findByPk(item.id_variacao);
+
+        const produtoImagens = await ProdutoImagens.findAll({
+            where: { id_produto: item.id }
+        });
+
+        const imagens = produtoImagens.map(img => img.img);
 
         return {
             ...item.dataValues,
             categoria: categoria ? categoria.nome : 'Categoria não encontrada',
-            variacao: variacao ? variacao.nome : 'Variação não encontrada'
+            variacao: variacao ? variacao.nome : 'Variação não encontrada',
+            imagens: imagens.length > 0 ? imagens : ['Nenhuma imagem disponível'],
+            firstImg: imagens.length > 0 ? imagens[0] : null
         };
     } catch (error) {
         return { error: 'Erro ao buscar produto' };
     }
-}
+};
 
 const showShop = async (req) => {
     const id  = req.session.data.parameter;
@@ -517,10 +638,18 @@ const showShop = async (req) => {
             img: filho.img
         }));
 
+        const produtoImagens = await ProdutoImagens.findAll({
+            where: { id_produto: item.id }
+        });
+
+        const imagens = produtoImagens.map(img => img.img);
+
         return {
             ...item.dataValues,
             categoria: categoria ? categoria.nome : 'Categoria não encontrada',
-            variacoes: variacoes.length > 0 ? variacoes : 'Sem variações disponíveis'
+            variacoes: variacoes.length > 0 ? variacoes : 'Sem variações disponíveis',
+            imagens: imagens.length > 0 ? imagens : ['Nenhuma imagem disponível'],
+            firstImg: imagens.length > 0 ? imagens[0] : null
         };
     } catch (error) {
         console.error('Erro ao buscar produto:', error);

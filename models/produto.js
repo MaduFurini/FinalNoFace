@@ -44,10 +44,6 @@ const Produto = database.define('produtos', {
         type: Sequelize.DOUBLE,
         allowNull: false
     },
-    img: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-    },
     status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

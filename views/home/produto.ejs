@@ -17,22 +17,41 @@
     <%- include('../partials/header.ejs') %>
 
     <div class="produtoInfo mx-auto flex max-w-[40rem] flex-col items-center divide-gray-200 pt-14 pb-20 md:max-w-[70rem] xl:max-w-[100rem] md:flex-row md:divide-x-2">
-      <p class="text-2xl sm:text-3xl font-bold md:hidden">Camiseta Paradise</p>
-      <div class="spoilers">
-        <img src="<%= produto.img ? produto.img : '/images/default.png' %>" alt="Imagem 1" class="spoiler">
-        <img src="/images/tabelaMedidas.png" alt="Imagem 2" class="spoiler">
-      </div>
+        <div class="mainImg mt-3 md:mt-0 md:w-[40%]">
+          <img id="selected-image" src="<%= produto.imagens.length > 0 ? produto.imagens[0] : '/images/default.png' %>" alt="Imagem principal" class="mx-auto h-64 sm:h-80 md:h-96 p-2" />
 
-      <div class="mt-3 md:mt-0 md:w-[40%]">
-        <div id="carousel-nav" class="carousel-nav">
-          <button id="prev" class="carousel-arrow">←</button>
-          <button id="next" class="carousel-arrow">→</button>
+          <div class="carousel">
+            <div id="carousel-container" class="carousel-container">
+              <div id="carousel-nav" class="carousel-nav">
+                <button id="prev" class="carousel-arrow">←</button>
+                <button id="next" class="carousel-arrow">→</button>
+              </div>
+
+              <div id="carousel-images" class="carousel-images">
+                <% const firstThreeImages = produto.imagens.slice(0, 3); %>
+                <% firstThreeImages.forEach((img, index) => { %>
+                  <img src="<%= img %>" alt="Imagem <%= index + 1 %>" class="carousel-image" />
+                <% }) %>
+              </div>
+
+              <div id="carousel-images-remaining" class="carousel-images" style="display:none;">
+                <% const remainingImages = produto.imagens.slice(3); %>
+                <% remainingImages.forEach((img, index) => { %>
+                  <img src="<%= img %>" alt="Imagem <%= index + 4 %>" class="carousel-image" />
+                <% }) %>
+              </div>
+            </div>
+
+            <!-- Imagem de tabela de medidas -->
+            <div class="carousel-footer">
+              <img src="/images/tabelaMedidas.png" alt="Imagem Tabela de Medidas" class="carousel-image"/>
+            </div>
+          </div>
         </div>
-        <img id="selected-image" src="<%= produto.img ? produto.img : '/images/default.png' %>" alt="" class="mx-auto h-64 sm:h-80 md:h-96 p-2" />
-      </div>
 
-      <div class="px-10 md:w-[60%] w-full">
-        <p class="hidden text-4xl font-bold md:block"><%= produto.nome %></p>
+
+      <div class="produtoInformacoes px-10 md:w-[60%] w-full">
+        <p class="text-4xl font-bold md:block"><%= produto.nome %></p>
 
         <% if (produto.descricao) { %>
             <details class="group mt-12 md:mt-8 text-sm" open>
@@ -42,7 +61,7 @@
         <% } %>
 
         <div class="mt-2 md:mt-7 text-center md:text-left">
-          <p class="hidden text-4xl font-semibold md:block" aria-hidden="true">
+          <p class="text-4xl font-semibold md:block" aria-hidden="true">
             R$ <%= produto.preco %>
           </p>
 
@@ -124,38 +143,57 @@
     <script src="/js/home/shop.js"></script>
     <script src="/js/home/carrinho.js"></script>
     <script>
-        let currentIndex = 0;
-        let images = document.querySelectorAll('.spoiler');
-        let selectedImage = document.getElementById('selected-image');
+        // Selecionando elementos DOM
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+        const carouselImages = document.querySelectorAll('.carousel-image');
+        const selectedImage = document.getElementById('selected-image');
+        const carouselContainer = document.getElementById('carousel-container');
+        let currentImageIndex = 0; // Controla qual conjunto de imagens está sendo exibido
 
-        function showImage(index) {
-            selectedImage.classList.add('fade-out');
+        // Função para atualizar o carrossel
+        function updateCarousel() {
+          const firstThreeImages = document.getElementById('carousel-images');
+          const remainingImages = document.getElementById('carousel-images-remaining');
 
-            setTimeout(() => {
-                selectedImage.src = images[index].src;
-                selectedImage.alt = images[index].alt;
-
-                selectedImage.classList.remove('fade-out');
-                selectedImage.classList.add('fade-in');
-            }, 500);
+          // Se estamos no início (exibindo as primeiras 3 imagens)
+          if (currentImageIndex === 0) {
+            firstThreeImages.style.display = 'flex';
+            remainingImages.style.display = 'none';
+          } else if (currentImageIndex === 1) {
+            firstThreeImages.style.display = 'none';
+            remainingImages.style.display = 'flex';
+          }
         }
 
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % images.length;
-            showImage(currentIndex);
-        }, 10000);
-
-        document.getElementById('next').addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % images.length;
-            showImage(currentIndex);
+        // Navegação para a próxima imagem
+        nextButton.addEventListener('click', () => {
+          currentImageIndex = (currentImageIndex + 1) % 2; // Alterna entre o conjunto 1 (primeiras 3 imagens) e o conjunto 2 (restantes)
+          updateCarousel();
         });
 
-        document.getElementById('prev').addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            showImage(currentIndex);
+        // Navegação para a imagem anterior
+        prevButton.addEventListener('click', () => {
+          currentImageIndex = (currentImageIndex - 1 + 2) % 2; // Alterna entre o conjunto 2 e o conjunto 1
+          updateCarousel();
         });
 
-        showImage(currentIndex);
+        // Atualiza a imagem principal ao clicar na imagem do carrossel
+        carouselImages.forEach(image => {
+          image.addEventListener('click', () => {
+            // Atualiza a imagem principal
+            selectedImage.src = image.src;
+
+            // Remove a classe 'selected' de todas as imagens
+            carouselImages.forEach(img => img.classList.remove('selected'));
+
+            // Adiciona a classe 'selected' à imagem clicada
+            image.classList.add('selected');
+          });
+        });
+
+        // Inicializa o carrossel exibindo as primeiras 3 imagens
+        updateCarousel();
 
     </script>
     <%- include('../partials/footer.ejs') %>

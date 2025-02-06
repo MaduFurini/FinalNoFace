@@ -22,7 +22,7 @@
                 <% Object.values(produtosPorCategoria).forEach(produtos => { %>
                     <% produtos.forEach(produto => { %>
                         <div class="menu-item" data-id="<%= produto.id %>">
-                            <img src="<%= produto.img ? produto.img : '/images/default.png' %>" alt="<%= produto.nome %>" />
+                            <img src="<%= produto.firstImg ? produto.firstImg : '/images/default.png' %>" alt="<%= produto.nome %>" />
                             <p class="nome"><%= produto.nome %></p>
                             <% if (produto.descricao) { %>
                                 <p class="descricao"><%= produto.descricao %></p>
@@ -45,6 +45,7 @@
             </div>
         <% } %>
     </main>
+
 
     <%- include('../partials/lookbook.ejs') %>
 

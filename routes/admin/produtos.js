@@ -19,6 +19,7 @@ const {
     authMiddleware,
     verifyUserAbility
 } = require("../../middlewares/auth");
+const {request} = require("express");
 
 router.get('/', authMiddleware, verifyUserAbility,async (req, res) => {
     const response = await index(req);
@@ -54,7 +55,7 @@ router.get('/variacoes/:id', blockDirectAccess, async (req, res) => {
     });
 });
 
-router.post('/',  upload.single('imagem'), blockDirectAccess, async (req, res) => {
+router.post('/',  upload, blockDirectAccess, async (req, res) => {
     const response = await store(req);
 
     if (response) {
@@ -64,7 +65,7 @@ router.post('/',  upload.single('imagem'), blockDirectAccess, async (req, res) =
     }
 });
 
-router.put('/:id', upload.single('imagem'), blockDirectAccess, async (req, res) => {
+router.put('/:id', upload, blockDirectAccess, async (req, res) => {
     const response = await update(req);
 
     if (response) {
