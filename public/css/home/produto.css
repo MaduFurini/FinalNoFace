@@ -894,7 +894,7 @@ details {
 
 .carousel-image {
     width: 50%;
-    height: 100% ;
+    height: 60% ;
     object-fit: cover;
     cursor: pointer;
     transition: transform 0.3s ease, border 0.3s ease;
@@ -924,7 +924,7 @@ details {
 
 #selected-image {
     width: 100%;
-    height: 100%;
+    height: 35vh;
     object-fit: contain;
 }
 
@@ -1064,7 +1064,7 @@ details {
 @media (max-width: 768px) {
     .mainImg {
         width: 80vw;
-        height: 90vh;
+        height: 60vh;
     }
 
     .carousel {
@@ -1096,6 +1096,7 @@ details {
     }
     .carousel-footer {
         width: 30%;
+        height: 10vh;
     }
     .carousel-footer img{
         width: 100%;
